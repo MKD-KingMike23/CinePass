@@ -10,25 +10,38 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
 import com.miguelrosa.cinepass.Adapters.SliderAdapter;
+import com.miguelrosa.cinepass.Domain.ApiClient;
+import com.miguelrosa.cinepass.Domain.Movie;
+import com.miguelrosa.cinepass.Domain.PopularMoviesResponse;
 import com.miguelrosa.cinepass.Domain.SliderItem;
+import com.miguelrosa.cinepass.Domain.TopRatedMoviesResponse;
+import com.miguelrosa.cinepass.Domain.UpComingMoviesResponse;
 import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //private RecyclerView.Adapter adapterBestMovies, adapterUpComming, adapterCategory;
-    //private RequestQueue mRequestQueue;
-    //private StringRequest mStringRequest1,mStringRequest2,mStringRequest3;
+    RecyclerView.Adapter adapterBestMovies, adapterUpComing, adapterTopRated;
     private ActivityMainBinding binding;
-    private Handler slideHandler = new Handler();
-    private ViewPager2 viewPager2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,60 +49,94 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        viewPager2 = binding.viewpagerSlider;
-        //binding.rv1.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        //binding.rv2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        //binding.rv3.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        banners();
+        fetchPopularMovies(1);
+        fetchUpCommingMovies(1);
+        fetchTopRatedMovies(1);
+        binding.rv1.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        binding.rv2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        binding.rv3.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
     }
+    private void fetchPopularMovies(int page) {
+        String apiKey = ApiClient.getApiKey();
+        Call<PopularMoviesResponse> call = ApiClient.getTmdbApiService().getPopularMovies(apiKey, page);
 
-    private void banners() {
-        List<SliderItem> sliderItems= new ArrayList<>();
-        sliderItems.add(new SliderItem(R.drawable.wide));
-        sliderItems.add(new SliderItem(R.drawable.wide1));
-        sliderItems.add(new SliderItem(R.drawable.wide3));
-
-        viewPager2.setAdapter(new SliderAdapter(sliderItems,viewPager2));
-        viewPager2.setClipToPadding(false);
-        viewPager2.setOffscreenPageLimit(3);
-        viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_ALWAYS);
-
-
-        CompositePageTransformer compositePageTransformer= new CompositePageTransformer();
-        compositePageTransformer.addTransformer(new MarginPageTransformer(40));
-        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
+        call.enqueue(new Callback<PopularMoviesResponse>() {
             @Override
-            public void transformPage(@NonNull View page, float position) {
-                float r=1-Math.abs(position);
-                page.setScaleY(0.85f+r*0.15f);
+            public void onResponse(Call<PopularMoviesResponse> call, retrofit2.Response<PopularMoviesResponse> response) {
+                if (response.isSuccessful()) {
+                    PopularMoviesResponse popularMoviesResponse = response.body();
+                    if (popularMoviesResponse != null) {
+                        List<Movie> movies = popularMoviesResponse.getResults();
+                        adapterBestMovies = new FilmListAdapter(movies);
+                        binding.rv1.setAdapter(adapterBestMovies);
+                        binding.progressBar1.setVisibility(View.GONE);
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    binding.progressBar1.setVisibility(View.VISIBLE);
+                }
             }
-        });
-        viewPager2.setPageTransformer(compositePageTransformer);
-        viewPager2.setCurrentItem(1);
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+
             @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                slideHandler.removeCallbacks(sliderRunnable);
+            public void onFailure(Call<PopularMoviesResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-    private Runnable sliderRunnable=new Runnable() {
-        @Override
-        public void run() {
-            viewPager2.setCurrentItem(viewPager2.getCurrentItem()+1);
-        }
-    };
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        slideHandler.removeCallbacks(sliderRunnable);
+    private void fetchTopRatedMovies(int page) {
+        String apiKey = ApiClient.getApiKey();
+        Call<TopRatedMoviesResponse> call = ApiClient.getTmdbApiService().getTopRatedMovies(apiKey, page);
+
+        call.enqueue(new Callback<TopRatedMoviesResponse>() {
+            @Override
+            public void onResponse(Call<TopRatedMoviesResponse> call, retrofit2.Response<TopRatedMoviesResponse> response) {
+                if (response.isSuccessful()) {
+                    TopRatedMoviesResponse topratedMoviesResponse = response.body();
+                    if (topratedMoviesResponse != null) {
+                        List<Movie> movies = topratedMoviesResponse.getResults();
+                        adapterTopRated = new FilmListAdapter(movies);
+                        binding.rv2.setAdapter(adapterTopRated);
+                        binding.progressBar2.setVisibility(View.GONE);
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    binding.progressBar2.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TopRatedMoviesResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        slideHandler.postDelayed(sliderRunnable,2000);
+    private void fetchUpCommingMovies(int page) {
+        String apiKey = ApiClient.getApiKey();
+        Call<UpComingMoviesResponse> call = ApiClient.getTmdbApiService().getUpComingMovies(apiKey, page);
+
+        call.enqueue(new Callback<UpComingMoviesResponse>() {
+            @Override
+            public void onResponse(Call<UpComingMoviesResponse> call, retrofit2.Response<UpComingMoviesResponse> response) {
+                if (response.isSuccessful()) {
+                    UpComingMoviesResponse upcomingMoviesResponse = response.body();
+                    if (upcomingMoviesResponse != null) {
+                        List<Movie> movies = upcomingMoviesResponse.getResults();
+                        adapterUpComing = new FilmListAdapter(movies);
+                        binding.rv3.setAdapter(adapterUpComing);
+                        binding.progressBar3.setVisibility(View.GONE);
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    binding.progressBar3.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpComingMoviesResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
