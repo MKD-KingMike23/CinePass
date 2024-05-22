@@ -1,7 +1,9 @@
 package com.miguelrosa.cinepass.Domain;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -34,4 +36,17 @@ public interface TmdbApiService {
     Call<GenreResponse> getGenres(
             @Query("api_key") String apiKey
     );
+    @POST("account/{account_id}/favorite")
+    Call<FavoriteResponse> markAsFavorite(
+            @Path("account_id") int accountId,
+            @Query("api_key") String apiKey,
+            @Body FavoriteRequest favoriteRequest
+    );
+
+//    @GET("account/{account_id}/favorite/movies")
+//    Call<MovieResponse> getFavoriteMovies(
+//            @Path("account_id") int accountId,
+//            @Query("api_key") String apiKey
+//    );
 }
+

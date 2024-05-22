@@ -18,8 +18,8 @@ public class Movie {
     @SerializedName("release_date")
     private String releaseDate;
 
-    @SerializedName("genre_ids")
-    private List<Integer> genreIds;
+    @SerializedName("genres")
+    private List<Genre> genres;
 
     @SerializedName("id")
     private int id;
@@ -85,12 +85,12 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public List<Integer> getGenreIds() {
-        return genreIds;
+    public List<Genre> getGenres() {
+        return genres;
     }
 
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
     public int getId() {
