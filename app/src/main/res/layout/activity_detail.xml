@@ -25,7 +25,6 @@
                 android:id="@+id/picDetail"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,8 +45,8 @@
                     android:id="@+id/imageViewFav"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:padding="8dp"
-                    android:src="@drawable/fav"
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_favorite_border_24"
                     android:background="@drawable/edittext_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

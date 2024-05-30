@@ -183,6 +183,7 @@
                     android:weightSum="0.7">
 
                     <LinearLayout
+                        android:id="@+id/perfil"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.33"
@@ -214,6 +215,7 @@
                         app:maxImageSize="30dp"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
                     <LinearLayout
+                        android:id="@+id/favoritos"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="0.33"

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +16,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.miguelrosa.cinepass.Adapters.GenreAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
+import com.miguelrosa.cinepass.Domain.FavoriteRequest;
+import com.miguelrosa.cinepass.Domain.FavoriteResponse;
 import com.miguelrosa.cinepass.Domain.Genre;
 import com.miguelrosa.cinepass.Domain.GenreResponse;
 import com.miguelrosa.cinepass.Domain.Movie;
+import com.miguelrosa.cinepass.Domain.MovieResponse;
 import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityDetailBinding;
 import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
@@ -34,15 +38,20 @@ import retrofit2.Response;
 public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
     private int movieId;
-    private Map<Integer, String> genreMap = new HashMap<>();
     private RecyclerView.Adapter genreAdapter;
     private List<Genre> genreList = new ArrayList<>();
+    private boolean isFavorite = false;
+    private int accountId = 21244357;
+    private String sessionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
+        sessionId = preferences.getString("sessionId", null);
 
         movieId = getIntent().getIntExtra("id", 0);
         binding.genreRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -51,6 +60,8 @@ public class DetailActivity extends AppCompatActivity {
 
         binding.imageViewBack.setOnClickListener(v -> finish());
         fetchMovieDetails(movieId);
+
+        binding.imageViewFav.setOnClickListener(v -> toggleFavorite());
     }
 
     private void fetchMovieDetails(int movieId) {
@@ -83,7 +94,6 @@ public class DetailActivity extends AppCompatActivity {
                                 .apply(requestOptions)
                                 .into(binding.picDetail);
 
-                        // Obtener los géneros directamente desde la película
                         List<Genre> genres = movie.getGenres();
                         if (genres != null) {
                             genreAdapter = new GenreAdapter(genres);
@@ -91,6 +101,7 @@ public class DetailActivity extends AppCompatActivity {
                         } else {
                             Log.i("DetailActivity", "La película no tiene géneros asociados");
                         }
+                        checkIfFavorite(movieId, sessionId);
                     }
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -102,5 +113,72 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void toggleFavorite() {
+        String apiKey = ApiClient.getApiKey();
+        FavoriteRequest request = new FavoriteRequest("movie", movieId, !isFavorite);
+
+        Call<FavoriteResponse> call = ApiClient.getTmdbApiService().markAsFavorite(accountId, apiKey, sessionId, request);
+        call.enqueue(new Callback<FavoriteResponse>() {
+            @Override
+            public void onResponse(Call<FavoriteResponse> call, Response<FavoriteResponse> response) {
+                if (response.isSuccessful()) {
+                    isFavorite = !isFavorite;
+                    updateFavoriteIcon();
+                    Toast.makeText(DetailActivity.this, "Favorite status changed", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FavoriteResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: 2" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void checkIfFavorite(int movieId, String sessionId) {
+        String apiKey = ApiClient.getApiKey();
+        Call<MovieResponse> call = ApiClient.getTmdbApiService().getFavoriteMovies(accountId, apiKey, sessionId);
+
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    MovieResponse movieResponse = response.body();
+                    if (movieResponse != null) {
+                        List<Movie> favoriteMovies = movieResponse.getResults();
+                        for (Movie movie : favoriteMovies) {
+                            if (movie.getId() == movieId) {
+                                isFavorite = true;
+                                updateFavoriteIcon();
+                                Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isFavorite);
+                                return;
+                            }
+                        }
+                    }
+                    isFavorite = false;
+                    Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isFavorite);
+                    updateFavoriteIcon();
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateFavoriteIcon() {
+        if (isFavorite) {
+            binding.imageViewFav.setImageResource(R.drawable.baseline_favorite_24);
+        } else {
+            binding.imageViewFav.setImageResource(R.drawable.baseline_favorite_border_24);
+        }
     }
 }

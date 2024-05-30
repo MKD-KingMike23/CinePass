@@ -11,5 +11,28 @@ public class FavoriteRequest {
         this.media_id = mediaId;
         this.favorite = favorite;
     }
-    // Getters and setters...
+
+    public String getMediaType() {
+        return media_type;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.media_type = mediaType;
+    }
+
+    public int getMediaId() {
+        return media_id;
+    }
+
+    public void setMediaId(int mediaId) {
+        this.media_id = mediaId;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 }

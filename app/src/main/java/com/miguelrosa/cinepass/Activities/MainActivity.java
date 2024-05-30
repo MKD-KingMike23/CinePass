@@ -8,6 +8,9 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,16 +20,19 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
 import com.miguelrosa.cinepass.Adapters.SliderAdapter;
+import com.miguelrosa.cinepass.Domain.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.ApiClient;
+import com.miguelrosa.cinepass.Domain.CreateSessionBody;
 import com.miguelrosa.cinepass.Domain.Movie;
 import com.miguelrosa.cinepass.Domain.PopularMoviesResponse;
+import com.miguelrosa.cinepass.Domain.RequestTokenResponse;
+import com.miguelrosa.cinepass.Domain.SessionResponse;
 import com.miguelrosa.cinepass.Domain.SliderItem;
 import com.miguelrosa.cinepass.Domain.TopRatedMoviesResponse;
 import com.miguelrosa.cinepass.Domain.UpComingMoviesResponse;
@@ -35,6 +41,7 @@ import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +56,22 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        String sessionId = getSessionId();
+
         fetchPopularMovies(1);
         fetchUpCommingMovies(1);
         fetchTopRatedMovies(1);
         binding.rv1.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         binding.rv2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         binding.rv3.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+
+        binding.favoritos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void fetchPopularMovies(int page) {
         String apiKey = ApiClient.getApiKey();
@@ -138,5 +155,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private String getSessionId() {
+        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
+        String sessionId = preferences.getString("sessionId", null);
+        Log.i("MainActivity", "ID DE SESION CARGADO: " + sessionId);
+        return sessionId;
     }
 }

@@ -40,13 +40,33 @@ public interface TmdbApiService {
     Call<FavoriteResponse> markAsFavorite(
             @Path("account_id") int accountId,
             @Query("api_key") String apiKey,
-            @Body FavoriteRequest favoriteRequest
-    );
+            @Query("session_id") String sessionId,
+            @Body FavoriteRequest body);
 
-//    @GET("account/{account_id}/favorite/movies")
-//    Call<MovieResponse> getFavoriteMovies(
-//            @Path("account_id") int accountId,
-//            @Query("api_key") String apiKey
-//    );
+    @GET("account/{account_id}/favorite/movies")
+    Call<MovieResponse> getFavoriteMovies(
+            @Query("account_id") int accountId,
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId);
+
+    @GET("authentication/token/new")
+    Call<RequestTokenResponse> getRequestToken(@Query("api_key") String apiKey);
+
+    @POST("authentication/token/validate_with_login")
+    Call<RequestTokenResponse> validateWithLogin(
+            @Query("api_key") String apiKey,
+            @Query("username") String username,
+            @Query("password") String password,
+            @Query("request_token") String requestToken);
+
+    @POST("authentication/session/new")
+    Call<SessionResponse> createSession(
+            @Body CreateSessionBody createSessionBody,
+            @Query("api_key") String apiKey);
+
+    @GET("account")
+    Call<AccountDetailsResponse> getAccountDetails(
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId);
 }
 

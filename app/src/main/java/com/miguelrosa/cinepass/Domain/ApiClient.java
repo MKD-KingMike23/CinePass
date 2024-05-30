@@ -1,5 +1,6 @@
 package com.miguelrosa.cinepass.Domain;
 
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -21,5 +22,8 @@ public class ApiClient {
 
     public static String getApiKey() {
         return API_KEY;
+    }
+    public static Call<RequestTokenResponse> getRequestToken() {
+        return getTmdbApiService().getRequestToken(API_KEY);
     }
 }
