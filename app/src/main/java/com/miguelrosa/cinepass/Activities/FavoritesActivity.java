@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.miguelrosa.cinepass.Adapters.FavoritesListAdapter;
 import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.CreateSessionBody;
@@ -31,7 +32,7 @@ import retrofit2.Response;
 
 public class FavoritesActivity extends AppCompatActivity {
     private ActivityFavoritesBinding binding;
-    private FilmListAdapter filmListAdapter;
+    private FavoritesListAdapter favoritesListAdapter;
     private List<Movie> favoriteMovies = new ArrayList<>();
     private int accountId = 21244357;
     private String sessionId;
@@ -45,10 +46,14 @@ public class FavoritesActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         sessionId = preferences.getString("sessionId", null);
 
-        binding.favoriteMoviesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        filmListAdapter = new FilmListAdapter(favoriteMovies);
-        binding.favoriteMoviesRecycler.setAdapter(filmListAdapter);
+        binding.favoriteMoviesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        favoritesListAdapter = new FavoritesListAdapter(favoriteMovies);
+        binding.favoriteMoviesRecycler.setAdapter(favoritesListAdapter);
 
+        binding.inicio.setOnClickListener(v -> {
+            Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
         fetchFavoriteMovies(sessionId);
     }
 
@@ -66,7 +71,7 @@ public class FavoritesActivity extends AppCompatActivity {
                     if (movieResponse != null) {
                         favoriteMovies.clear();
                         favoriteMovies.addAll(movieResponse.getResults());
-                        filmListAdapter.notifyDataSetChanged();
+                        favoritesListAdapter.notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(FavoritesActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();

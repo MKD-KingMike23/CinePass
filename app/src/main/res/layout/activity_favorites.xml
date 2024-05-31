@@ -18,7 +18,6 @@
             android:layout_height="50dp"
             android:background="@drawable/edittext_background"
             android:drawableStart="@drawable/search"
-            android:drawableEnd="@drawable/microphone"
             android:drawablePadding="8dp"
             android:ems="10"
             android:hint="Buscar Películas..."
@@ -58,8 +57,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favoriteMoviesRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="110dp"
+            android:layout_marginBottom="45dp"
             android:clipToPadding="false"
             android:paddingBottom="16dp"
             android:scrollbars="vertical"
@@ -118,6 +118,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/inicio"
                     style="@style/Floating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

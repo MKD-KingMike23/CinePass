@@ -126,7 +126,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     isFavorite = !isFavorite;
                     updateFavoriteIcon();
-                    Toast.makeText(DetailActivity.this, "Favorite status changed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailActivity.this, "Película añadida a lista de Favoritos", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
                 }
