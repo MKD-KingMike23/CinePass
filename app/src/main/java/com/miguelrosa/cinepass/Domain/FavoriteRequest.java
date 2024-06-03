@@ -5,11 +5,13 @@ public class FavoriteRequest {
     private String media_type;
     private int media_id;
     private boolean favorite;
+    private boolean watchlist;
 
-    public FavoriteRequest(String mediaType, int mediaId, boolean favorite) {
+    public FavoriteRequest(String mediaType, int mediaId, boolean favorite, boolean watchlist) {
         this.media_type = mediaType;
         this.media_id = mediaId;
         this.favorite = favorite;
+        this.watchlist = watchlist;
     }
 
     public String getMediaType() {

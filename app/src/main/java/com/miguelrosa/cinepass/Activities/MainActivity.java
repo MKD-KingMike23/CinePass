@@ -72,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void fetchPopularMovies(int page) {
         String apiKey = ApiClient.getApiKey();
-        Call<PopularMoviesResponse> call = ApiClient.getTmdbApiService().getPopularMovies(apiKey, page);
+        String language = "es-ES";
+
+        Call<PopularMoviesResponse> call = ApiClient.getTmdbApiService().getPopularMovies(apiKey, page, language);
 
         call.enqueue(new Callback<PopularMoviesResponse>() {
             @Override
@@ -100,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchTopRatedMovies(int page) {
         String apiKey = ApiClient.getApiKey();
-        Call<TopRatedMoviesResponse> call = ApiClient.getTmdbApiService().getTopRatedMovies(apiKey, page);
+        String language = "es-ES";
+
+        Call<TopRatedMoviesResponse> call = ApiClient.getTmdbApiService().getTopRatedMovies(apiKey, page, language);
 
         call.enqueue(new Callback<TopRatedMoviesResponse>() {
             @Override
@@ -128,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchUpCommingMovies(int page) {
         String apiKey = ApiClient.getApiKey();
-        Call<UpComingMoviesResponse> call = ApiClient.getTmdbApiService().getUpComingMovies(apiKey, page);
+        String language = "es-ES";
+
+        Call<UpComingMoviesResponse> call = ApiClient.getTmdbApiService().getUpComingMovies(apiKey, page, language);
 
         call.enqueue(new Callback<UpComingMoviesResponse>() {
             @Override

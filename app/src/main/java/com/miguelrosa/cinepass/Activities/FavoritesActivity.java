@@ -60,7 +60,9 @@ public class FavoritesActivity extends AppCompatActivity {
     private void fetchFavoriteMovies(String sessionId) {
         binding.progressBarFavorites.setVisibility(View.VISIBLE);
         String apiKey = ApiClient.getApiKey();
-        Call<MovieResponse> call = ApiClient.getTmdbApiService().getFavoriteMovies(accountId, apiKey, sessionId);
+        String language = "es-ES";
+
+        Call<MovieResponse> call = ApiClient.getTmdbApiService().getFavoriteMovies(accountId, apiKey, sessionId, language);
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override

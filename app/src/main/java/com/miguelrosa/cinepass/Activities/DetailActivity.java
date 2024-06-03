@@ -41,6 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView.Adapter genreAdapter;
     private List<Genre> genreList = new ArrayList<>();
     private boolean isFavorite = false;
+    private boolean isWatchlisted = false;
     private int accountId = 21244357;
     private String sessionId;
 
@@ -62,13 +63,16 @@ public class DetailActivity extends AppCompatActivity {
         fetchMovieDetails(movieId);
 
         binding.imageViewFav.setOnClickListener(v -> toggleFavorite());
+        binding.imageViewWatchlist.setOnClickListener(v -> toggleWatchlist());
     }
 
     private void fetchMovieDetails(int movieId) {
         binding.progressBarDetail.setVisibility(View.VISIBLE);
         binding.scrollViewDetail.setVisibility(View.GONE);
         String apiKey = ApiClient.getApiKey();
-        Call<Movie> call = ApiClient.getTmdbApiService().getMovieDetails(movieId, apiKey);
+        String language = "es-ES";
+
+        Call<Movie> call = ApiClient.getTmdbApiService().getMovieDetails(movieId, apiKey, language);
 
         call.enqueue(new Callback<Movie>() {
             @Override
@@ -102,6 +106,7 @@ public class DetailActivity extends AppCompatActivity {
                             Log.i("DetailActivity", "La película no tiene géneros asociados");
                         }
                         checkIfFavorite(movieId, sessionId);
+                        checkIfWatchlist(movieId, sessionId);
                     }
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -117,7 +122,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void toggleFavorite() {
         String apiKey = ApiClient.getApiKey();
-        FavoriteRequest request = new FavoriteRequest("movie", movieId, !isFavorite);
+        FavoriteRequest request = new FavoriteRequest("movie", movieId, !isFavorite, !isWatchlisted);
 
         Call<FavoriteResponse> call = ApiClient.getTmdbApiService().markAsFavorite(accountId, apiKey, sessionId, request);
         call.enqueue(new Callback<FavoriteResponse>() {
@@ -139,9 +144,35 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    private void toggleWatchlist() {
+        String apiKey = ApiClient.getApiKey();
+        FavoriteRequest request = new FavoriteRequest("movie", movieId, !isFavorite , !isWatchlisted);
+
+        Call<FavoriteResponse> call = ApiClient.getTmdbApiService().addToWatchlist(accountId, apiKey, sessionId, request);
+        call.enqueue(new Callback<FavoriteResponse>() {
+            @Override
+            public void onResponse(Call<FavoriteResponse> call, Response<FavoriteResponse> response) {
+                if (response.isSuccessful()) {
+                    isWatchlisted = !isWatchlisted;
+                    updateWatchlistIcon();
+                    Toast.makeText(DetailActivity.this, "Película añadida a la Watchlist", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FavoriteResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: 2" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void checkIfFavorite(int movieId, String sessionId) {
         String apiKey = ApiClient.getApiKey();
-        Call<MovieResponse> call = ApiClient.getTmdbApiService().getFavoriteMovies(accountId, apiKey, sessionId);
+        String language = "es-ES";
+
+        Call<MovieResponse> call = ApiClient.getTmdbApiService().getFavoriteMovies(accountId, apiKey, sessionId, language);
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override
@@ -154,14 +185,49 @@ public class DetailActivity extends AppCompatActivity {
                             if (movie.getId() == movieId) {
                                 isFavorite = true;
                                 updateFavoriteIcon();
-                                Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isFavorite);
                                 return;
                             }
                         }
                     }
                     isFavorite = false;
-                    Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isFavorite);
                     updateFavoriteIcon();
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void checkIfWatchlist(int movieId, String sessionId) {
+        String apiKey = ApiClient.getApiKey();
+        String language = "es-ES";
+
+        Call<MovieResponse> call = ApiClient.getTmdbApiService().getWatchlistMovies(accountId, apiKey, sessionId, language);
+
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    MovieResponse movieResponse = response.body();
+                    if (movieResponse != null) {
+                        List<Movie> watchlistMovies = movieResponse.getResults();
+                        for (Movie movie : watchlistMovies) {
+                            if (movie.getId() == movieId) {
+                                isWatchlisted = true;
+                                updateWatchlistIcon();
+                                Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isWatchlisted);
+                                return;
+                            }
+                        }
+                    }
+                    isWatchlisted = false;
+                    Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isWatchlisted);
+                    updateWatchlistIcon();
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -179,6 +245,14 @@ public class DetailActivity extends AppCompatActivity {
             binding.imageViewFav.setImageResource(R.drawable.baseline_favorite_24);
         } else {
             binding.imageViewFav.setImageResource(R.drawable.baseline_favorite_border_24);
+        }
+    }
+
+    private void updateWatchlistIcon() {
+        if (isWatchlisted) {
+            binding.imageViewWatchlist.setImageResource(R.drawable.baseline_check_24);
+        } else {
+            binding.imageViewWatchlist.setImageResource(R.drawable.baseline_add_24);
         }
     }
 }

@@ -11,25 +11,29 @@ public interface TmdbApiService {
     @GET("movie/popular")
     Call<PopularMoviesResponse> getPopularMovies(
             @Query("api_key") String apiKey,
-            @Query("page") int page
+            @Query("page") int page,
+            @Query("language") String language
     );
 
     @GET("movie/upcoming")
     Call<UpComingMoviesResponse> getUpComingMovies(
             @Query("api_key") String apiKey,
-            @Query("page") int page
+            @Query("page") int page,
+            @Query("language") String language
     );
 
     @GET("movie/top_rated")
     Call<TopRatedMoviesResponse> getTopRatedMovies(
             @Query("api_key") String apiKey,
-            @Query("page") int page
+            @Query("page") int page,
+            @Query("language") String language
     );
 
     @GET("movie/{movie_id}")
     Call<Movie> getMovieDetails(
             @Path("movie_id") int movieId,
-            @Query("api_key") String apiKey
+            @Query("api_key") String apiKey,
+            @Query("language") String language
     );
 
     @GET("genre/movie/list")
@@ -47,7 +51,8 @@ public interface TmdbApiService {
     Call<MovieResponse> getFavoriteMovies(
             @Query("account_id") int accountId,
             @Query("api_key") String apiKey,
-            @Query("session_id") String sessionId);
+            @Query("session_id") String sessionId,
+            @Query("language") String language);
 
     @GET("authentication/token/new")
     Call<RequestTokenResponse> getRequestToken(@Query("api_key") String apiKey);
@@ -68,5 +73,19 @@ public interface TmdbApiService {
     Call<AccountDetailsResponse> getAccountDetails(
             @Query("api_key") String apiKey,
             @Query("session_id") String sessionId);
+
+    @POST("account/{account_id}/watchlist")
+    Call<FavoriteResponse> addToWatchlist(
+            @Path("account_id") int accountId,
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId,
+            @Body FavoriteRequest request);
+
+    @GET("account/{account_id}/watchlist/movies")
+    Call<MovieResponse> getWatchlistMovies(
+            @Path("account_id") int accountId,
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId,
+            @Query("language") String language);
 }
 
