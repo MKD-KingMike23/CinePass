@@ -1,5 +1,7 @@
 package com.miguelrosa.cinepass.Activities;
 
+import static android.view.View.GONE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.miguelrosa.cinepass.Adapters.GenreAdapter;
+import com.miguelrosa.cinepass.Adapters.TrailerAdapter;
+import com.miguelrosa.cinepass.Adapters.WatchProviderAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.FavoriteRequest;
 import com.miguelrosa.cinepass.Domain.FavoriteResponse;
@@ -22,6 +26,9 @@ import com.miguelrosa.cinepass.Domain.Genre;
 import com.miguelrosa.cinepass.Domain.GenreResponse;
 import com.miguelrosa.cinepass.Domain.Movie;
 import com.miguelrosa.cinepass.Domain.MovieResponse;
+import com.miguelrosa.cinepass.Domain.Video;
+import com.miguelrosa.cinepass.Domain.VideoResponse;
+import com.miguelrosa.cinepass.Domain.WatchProviderResponse;
 import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityDetailBinding;
 import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
@@ -39,6 +46,8 @@ public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
     private int movieId;
     private RecyclerView.Adapter genreAdapter;
+    private RecyclerView.Adapter trailerAdapter;
+    private RecyclerView.Adapter watchProviderAdapter;
     private List<Genre> genreList = new ArrayList<>();
     private boolean isFavorite = false;
     private boolean isWatchlisted = false;
@@ -55,12 +64,18 @@ public class DetailActivity extends AppCompatActivity {
         sessionId = preferences.getString("sessionId", null);
 
         movieId = getIntent().getIntExtra("id", 0);
+
+        binding.trailersRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.watchProvidersRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
         binding.genreRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         genreAdapter = new GenreAdapter(genreList);
         binding.genreRecycler.setAdapter(genreAdapter);
 
         binding.imageViewBack.setOnClickListener(v -> finish());
         fetchMovieDetails(movieId);
+        fetchMovieTrailers(movieId);
+        fetchWatchProviders(movieId);
 
         binding.imageViewFav.setOnClickListener(v -> toggleFavorite());
         binding.imageViewWatchlist.setOnClickListener(v -> toggleWatchlist());
@@ -68,7 +83,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void fetchMovieDetails(int movieId) {
         binding.progressBarDetail.setVisibility(View.VISIBLE);
-        binding.scrollViewDetail.setVisibility(View.GONE);
+        binding.scrollViewDetail.setVisibility(GONE);
         String apiKey = ApiClient.getApiKey();
         String language = "es-ES";
 
@@ -80,7 +95,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Movie movie = response.body();
                     if (movie != null) {
-                        binding.progressBarDetail.setVisibility(View.GONE);
+                        binding.progressBarDetail.setVisibility(GONE);
                         binding.scrollViewDetail.setVisibility(View.VISIBLE);
 
                         binding.movieNameTxt.setText(movie.getTitle());
@@ -115,6 +130,75 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchMovieTrailers(int movieId) {
+        String apiKey = ApiClient.getApiKey();
+        String language = "es-ES";
+
+        Call<VideoResponse> call = ApiClient.getTmdbApiService().getMovieVideos(movieId, apiKey, language);
+        call.enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                if (response.isSuccessful()) {
+                    VideoResponse videoResponse = response.body();
+                    if (videoResponse != null) {
+                        binding.textView23.setVisibility(View.VISIBLE);
+                        List<Video> trailers = new ArrayList<>();
+                        for (Video video : videoResponse.getResults()) {
+                            if ("Trailer".equalsIgnoreCase(video.getType())) {
+                                trailers.add(video);
+                            }
+                        }
+                        trailerAdapter = new TrailerAdapter(trailers);
+                        binding.trailersRecycler.setAdapter(trailerAdapter);
+                    } else {
+                        binding.textView23.setVisibility(GONE);
+                    }
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchWatchProviders(int movieId) {
+        String apiKey = ApiClient.getApiKey();
+
+        Call<WatchProviderResponse> call = ApiClient.getTmdbApiService().getWatchProviders(movieId, apiKey);
+        call.enqueue(new Callback<WatchProviderResponse>() {
+            @Override
+            public void onResponse(Call<WatchProviderResponse> call, Response<WatchProviderResponse> response) {
+                if (response.isSuccessful()) {
+                    WatchProviderResponse watchProviderResponse = response.body();
+                    if (watchProviderResponse != null && watchProviderResponse.getResults().containsKey("ES")) {
+                        binding.textView24.setVisibility(View.VISIBLE);
+                        WatchProviderResponse.ProviderCountry providerCountry = watchProviderResponse.getResults().get("ES");
+                        List<WatchProviderResponse.Provider> providers = providerCountry.getFlatrate();
+                        if (providers != null) {
+                            WatchProviderAdapter adapter = new WatchProviderAdapter(providers);
+                            binding.watchProvidersRecycler.setAdapter(adapter);
+                        } else {
+                            Log.i("DetailActivity", "No hay proveedores de visualización para este país");
+                        }
+                    } else {
+                        binding.textView24.setVisibility(GONE);
+                    }
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WatchProviderResponse> call, Throwable t) {
                 Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
