@@ -4,50 +4,33 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.CompositePageTransformer;
-import androidx.viewpager2.widget.MarginPageTransformer;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
-import com.miguelrosa.cinepass.Adapters.SliderAdapter;
-import com.miguelrosa.cinepass.Domain.AccountDetailsResponse;
+import com.miguelrosa.cinepass.Adapters.MovieSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.Domain.CreateSessionBody;
 import com.miguelrosa.cinepass.Domain.Movie;
+import com.miguelrosa.cinepass.Domain.MovieResponse;
 import com.miguelrosa.cinepass.Domain.PopularMoviesResponse;
-import com.miguelrosa.cinepass.Domain.RequestTokenResponse;
-import com.miguelrosa.cinepass.Domain.SessionResponse;
-import com.miguelrosa.cinepass.Domain.SliderItem;
 import com.miguelrosa.cinepass.Domain.TopRatedMoviesResponse;
 import com.miguelrosa.cinepass.Domain.UpComingMoviesResponse;
-import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    RecyclerView.Adapter adapterBestMovies, adapterUpComing, adapterTopRated;
+    private RecyclerView.Adapter adapterBestMovies, adapterUpComing, adapterTopRated, movieSearchAdapter;
     private ActivityMainBinding binding;
 
     @Override
@@ -58,18 +41,40 @@ public class MainActivity extends AppCompatActivity {
 
         String sessionId = getSessionId();
 
-        fetchPopularMovies(1);
-        fetchUpCommingMovies(1);
-        fetchTopRatedMovies(1);
-        binding.rv1.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        binding.rv2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
-        binding.rv3.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        fetchMainMovies();
+
+        binding.rv1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.rv2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.rv3.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         binding.favoritos.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
             startActivity(intent);
         });
+
+        binding.rvsearch.setLayoutManager(new LinearLayoutManager(this));
+        movieSearchAdapter = new MovieSearchAdapter();
+        binding.rvsearch.setAdapter(movieSearchAdapter);
+
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchMovies(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchMovies(newText);
+
+                if (newText.isEmpty()) {
+                    fetchMainMovies();
+                }
+                return false;
+            }
+        });
     }
+
     private void fetchPopularMovies(int page) {
         String apiKey = ApiClient.getApiKey();
         String language = "es-ES";
@@ -160,10 +165,62 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void searchMovies(String query) {
+        String apiKey = ApiClient.getApiKey();
+        String language = "es-ES";
+
+        Call<MovieResponse> call = ApiClient.getTmdbApiService().searchMovies(apiKey, query, language);
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    MovieResponse movieResponse = response.body();
+                    if (movieResponse != null) {
+                        List<Movie> searchResults = movieResponse.getResults();
+                        ((MovieSearchAdapter) movieSearchAdapter).updateMovies(searchResults);
+
+                        binding.rvsearch.setVisibility(View.VISIBLE);
+                        binding.rv1.setVisibility(View.INVISIBLE);
+                        binding.rv2.setVisibility(View.INVISIBLE);
+                        binding.rv3.setVisibility(View.INVISIBLE);
+                        binding.textView9.setVisibility(View.INVISIBLE);
+                        binding.textView10.setVisibility(View.INVISIBLE);
+                        binding.textView11.setVisibility(View.INVISIBLE);
+
+                        Log.i("RESULTADOS FILTRADOS", movieResponse.getResults().toString());
+
+                        if (movieResponse.getResults().toString().equals("[]")) {
+                            fetchMainMovies();
+                        }
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void fetchMainMovies() {
+        binding.rvsearch.setVisibility(View.INVISIBLE);
+        binding.rv1.setVisibility(View.VISIBLE);
+        binding.rv2.setVisibility(View.VISIBLE);
+        binding.rv3.setVisibility(View.VISIBLE);
+        binding.textView9.setVisibility(View.VISIBLE);
+        binding.textView10.setVisibility(View.VISIBLE);
+        binding.textView11.setVisibility(View.VISIBLE);
+
+        fetchPopularMovies(1);
+        fetchUpCommingMovies(1);
+        fetchTopRatedMovies(1);
+    }
+
     private String getSessionId() {
-        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
-        String sessionId = preferences.getString("sessionId", null);
-        Log.i("MainActivity", "ID DE SESION CARGADO: " + sessionId);
-        return sessionId;
+        SharedPreferences preferences = getSharedPreferences("cinepass_preferences", MODE_PRIVATE);
+        return preferences.getString("session_id", "");
     }
 }

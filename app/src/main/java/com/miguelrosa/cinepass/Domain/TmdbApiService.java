@@ -100,5 +100,12 @@ public interface TmdbApiService {
             @Path("movie_id") int movieId,
             @Query("api_key") String apiKey
     );
+
+    @GET("search/movie")
+    Call<MovieResponse> searchMovies(
+            @Query("api_key") String apiKey,
+            @Query("query") String query,
+            @Query("language") String language
+    );
 }
 
