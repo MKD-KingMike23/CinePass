@@ -79,6 +79,7 @@
                 android:weightSum="0.7">
 
                 <LinearLayout
+                    android:id="@+id/perfil"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.33"
@@ -86,11 +87,11 @@
 
                     <ImageView
                         android:id="@+id/imageView6"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
-                        android:src="@drawable/btn_4"
+                        android:src="@drawable/outline_account_circle_24"
                         app:tint="@color/white" />
 
                     <TextView

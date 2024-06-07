@@ -54,6 +54,12 @@ public class FavoritesActivity extends AppCompatActivity {
             Intent intent = new Intent(FavoritesActivity.this, MainActivity.class);
             startActivity(intent);
         });
+
+        binding.perfil.setOnClickListener(v -> {
+            Intent intent = new Intent(FavoritesActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
         fetchFavoriteMovies(sessionId);
     }
 

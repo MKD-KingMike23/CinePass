@@ -2,6 +2,7 @@ package com.miguelrosa.cinepass.Domain;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -69,11 +70,6 @@ public interface TmdbApiService {
             @Body CreateSessionBody createSessionBody,
             @Query("api_key") String apiKey);
 
-    @GET("account")
-    Call<AccountDetailsResponse> getAccountDetails(
-            @Query("api_key") String apiKey,
-            @Query("session_id") String sessionId);
-
     @POST("account/{account_id}/watchlist")
     Call<FavoriteResponse> addToWatchlist(
             @Path("account_id") int accountId,
@@ -106,6 +102,18 @@ public interface TmdbApiService {
             @Query("api_key") String apiKey,
             @Query("query") String query,
             @Query("language") String language
+    );
+
+    @GET("account")
+    Call<AccountDetailsResponse> getAccountDetails(
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId
+    );
+
+    @DELETE("authentication/session")
+    Call<Void> deleteSession(
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId
     );
 }
 

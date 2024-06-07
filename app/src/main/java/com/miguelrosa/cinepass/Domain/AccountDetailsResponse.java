@@ -1,24 +1,44 @@
 package com.miguelrosa.cinepass.Domain;
 
+import com.google.gson.annotations.SerializedName;
+
 public class AccountDetailsResponse {
+    @SerializedName("id")
     private int id;
+
+    @SerializedName("username")
     private String username;
 
-    // Getters y setters
+    @SerializedName("avatar")
+    private Avatar avatar;
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public static class Avatar {
+        @SerializedName("tmdb")
+        private TmdbAvatar tmdb;
+
+        public TmdbAvatar getTmdb() {
+            return tmdb;
+        }
+    }
+
+    public static class TmdbAvatar {
+        @SerializedName("avatar_path")
+        private String avatarPath;
+
+        public String getAvatarPath() {
+            return avatarPath;
+        }
     }
 }

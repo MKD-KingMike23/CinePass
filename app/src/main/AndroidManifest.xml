@@ -14,18 +14,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CinePass"
         tools:targetApi="31">
-        <activity android:name=".Activities.FavoritesActivity"
+        <activity
+            android:name=".Activities.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.FavoritesActivity"
             android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-            <data
-                android:scheme="cinepass"
-                android:host="auth" />
-        </intent-filter>
+                <data
+                    android:host="auth"
+                    android:scheme="cinepass" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activities.DetailActivity"

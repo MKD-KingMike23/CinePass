@@ -147,16 +147,19 @@ public class DetailActivity extends AppCompatActivity {
                     VideoResponse videoResponse = response.body();
                     if (videoResponse != null) {
                         binding.textView23.setVisibility(View.VISIBLE);
+
                         List<Video> trailers = new ArrayList<>();
                         for (Video video : videoResponse.getResults()) {
                             if ("Trailer".equalsIgnoreCase(video.getType())) {
                                 trailers.add(video);
                             }
                         }
+                        if (trailers.isEmpty()){
+                            binding.textView23.setVisibility(GONE);
+                        }
+
                         trailerAdapter = new TrailerAdapter(trailers);
                         binding.trailersRecycler.setAdapter(trailerAdapter);
-                    } else {
-                        binding.textView23.setVisibility(GONE);
                     }
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -187,7 +190,7 @@ public class DetailActivity extends AppCompatActivity {
                             WatchProviderAdapter adapter = new WatchProviderAdapter(providers);
                             binding.watchProvidersRecycler.setAdapter(adapter);
                         } else {
-                            Log.i("DetailActivity", "No hay proveedores de visualización para este país");
+                            binding.textView24.setVisibility(GONE);
                         }
                     } else {
                         binding.textView24.setVisibility(GONE);
