@@ -21,24 +21,24 @@ import com.miguelrosa.cinepass.R;
 
 import java.util.List;
 
-public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdapter.ViewHolder>{
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder>{
     List<Movie> items;
     Context context;
 
-    public FavoritesListAdapter(List<Movie> items) {
+    public ListAdapter(List<Movie> items) {
         this.items = items;
     }
 
     @NonNull
     @Override
-    public FavoritesListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context= parent.getContext();
         View inflate= LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_favorite,parent,false);
-        return new FavoritesListAdapter.ViewHolder(inflate);
+        return new ListAdapter.ViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavoritesListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListAdapter.ViewHolder holder, int position) {
         Movie movie = items.get(position);
 
         holder.titleTxt.setText(movie.getTitle());

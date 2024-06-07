@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CinePass</string>
+
+    <string-array name="lists_array">
+        <item>Selecciona una lista de películas...</item>
+        <item>Favoritos</item>
+        <item>Watchlist</item>
+    </string-array>
 </resources>

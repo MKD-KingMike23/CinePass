@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.miguelrosa.cinepass.Domain.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityProfileBinding;
 
 import retrofit2.Call;
@@ -89,13 +88,15 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initializebuttons() {
-        binding.wishlistLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, FavoritesActivity.class);
+        binding.watchlistLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, ListsActivity.class);
+            intent.putExtra("lista", "watchlist");
             startActivity(intent);
         });
 
         binding.favoritesLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, FavoritesActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, ListsActivity.class);
+            intent.putExtra("lista", "favoritos");
             startActivity(intent);
         });
 
@@ -114,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.favoritos.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, FavoritesActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, ListsActivity.class);
             startActivity(intent);
         });
     }

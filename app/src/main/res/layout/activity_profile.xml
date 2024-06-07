@@ -95,7 +95,7 @@
                     android:layout_weight="3">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/wishlistLayout"
+                        android:id="@+id/watchlistLayout"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:elevation="4dp"
@@ -106,33 +106,33 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
-                            android:id="@+id/wishlistImage"
+                            android:id="@+id/watchlistImage"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:background="@drawable/profile_image_background_2"
                             android:elevation="6dp"
                             android:padding="5dp"
                             android:src="@drawable/baseline_check_24"
-                            app:layout_constraintBottom_toTopOf="@+id/wishlisttv"
+                            app:layout_constraintBottom_toTopOf="@+id/watchlisttv"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/wishlisttv"
+                            android:id="@+id/watchlisttv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="3dp"
                             android:layout_marginBottom="3dp"
                             android:elevation="6dp"
-                            android:text="Wishlist"
+                            android:text="Pendientes"
                             android:textColor="@color/main_color"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/wishlistImage" />
+                            app:layout_constraintTop_toBottomOf="@id/watchlistImage" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -143,7 +143,7 @@
                         android:background="@drawable/profile_image_background"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/wishlistLayout"
+                        app:layout_constraintStart_toEndOf="@id/watchlistLayout"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <ImageView
@@ -309,18 +309,18 @@
 
                     <ImageView
                         android:id="@+id/imageView4"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
-                        android:src="@drawable/btn_2"
+                        android:src="@drawable/baseline_format_list_bulleted_24"
                         app:tint="@color/white" />
 
                     <TextView
                         android:id="@+id/textView13"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Favoritos"
+                        android:text="Listas"
                         android:gravity="center_horizontal"
                         android:textColor="@color/white" />
                 </LinearLayout>

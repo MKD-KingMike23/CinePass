@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.favoritos.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, FavoritesActivity.class);
+            Intent intent = new Intent(MainActivity.this, ListsActivity.class);
             startActivity(intent);
         });
 

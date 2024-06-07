@@ -243,18 +243,18 @@
 
                         <ImageView
                             android:id="@+id/imageView4"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:layout_gravity="center"
                             android:layout_margin="5dp"
-                            android:src="@drawable/btn_2"
+                            android:src="@drawable/baseline_format_list_bulleted_24"
                             app:tint="@color/white" />
 
                         <TextView
                             android:id="@+id/textView13"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Favoritos"
+                            android:text="Listas"
                             android:textAlignment="center"
                             android:textColor="@color/white" />
                     </LinearLayout>
