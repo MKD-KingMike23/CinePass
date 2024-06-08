@@ -32,7 +32,7 @@ public class ListsActivity extends AppCompatActivity {
     private List<Movie> movieList = new ArrayList<>();
     private Spinner listSelectorSpinner;
     private String sessionId;
-    private int accountId = 21244357;
+    private int accountId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,7 @@ public class ListsActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         sessionId = preferences.getString("sessionId", null);
+        accountId = preferences.getInt("accountId", -1);
 
         binding.favoriteMoviesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listAdapter = new ListAdapter(movieList);
@@ -59,7 +60,7 @@ public class ListsActivity extends AppCompatActivity {
         setupListSelectorSpinner();
 
         binding.inicio.setOnClickListener(v -> {
-            Intent intent = new Intent(ListsActivity.this, MainActivity.class);
+            Intent intent = new Intent(ListsActivity.this, DashboardActivity.class);
             startActivity(intent);
         });
 

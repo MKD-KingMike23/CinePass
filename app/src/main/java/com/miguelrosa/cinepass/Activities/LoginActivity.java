@@ -2,13 +2,12 @@ package com.miguelrosa.cinepass.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.miguelrosa.cinepass.Domain.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.CreateSessionBody;
 import com.miguelrosa.cinepass.Domain.RequestTokenResponse;
@@ -106,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (sessionResponse != null && sessionResponse.isSuccess()) {
                         String sessionId = sessionResponse.getSessionId();
                         saveSessionId(sessionId);
-                        navigateToMainActivity();
+                        fetchAccountDetails(sessionId);
                     } else {
                         Toast.makeText(LoginActivity.this, "Failed to create session.", Toast.LENGTH_SHORT).show();
                     }
@@ -122,6 +121,38 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchAccountDetails(String sessionId) {
+        String apiKey = ApiClient.getApiKey();
+
+        Call<AccountDetailsResponse> call = ApiClient.getTmdbApiService().getAccountDetails(apiKey, sessionId);
+
+        call.enqueue(new Callback<AccountDetailsResponse>() {
+            @Override
+            public void onResponse(Call<AccountDetailsResponse> call, Response<AccountDetailsResponse> response) {
+                if (response.isSuccessful()) {
+                    AccountDetailsResponse accountResponse = response.body();
+                    if (accountResponse != null) {
+                        int accountId = accountResponse.getId();
+
+                        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("accountId", accountId);
+                        editor.apply();
+
+                        navigateToMainActivity();
+                    }
+                } else {
+                    Toast.makeText(LoginActivity.this, "Error: RESPONSE " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccountDetailsResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void saveSessionId(String sessionId) {
         SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -130,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToMainActivity() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
         finish();
     }
 }

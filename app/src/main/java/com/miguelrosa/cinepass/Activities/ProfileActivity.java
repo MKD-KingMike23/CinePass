@@ -110,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         binding.inicio.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, DashboardActivity.class);
             startActivity(intent);
         });
 
