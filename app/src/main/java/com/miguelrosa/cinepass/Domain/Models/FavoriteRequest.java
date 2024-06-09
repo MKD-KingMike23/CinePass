@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Models;
 
 // FavoriteRequest.java
 public class FavoriteRequest {

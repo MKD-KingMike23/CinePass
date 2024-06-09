@@ -1,4 +1,6 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Responses;
+
+import com.miguelrosa.cinepass.Domain.Models.Video;
 
 import java.util.List;
 

@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.miguelrosa.cinepass.Adapters.ListAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.Domain.Movie;
-import com.miguelrosa.cinepass.Domain.MovieResponse;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
 import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityListsBinding;
 

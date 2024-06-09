@@ -16,11 +16,11 @@ import android.widget.Toast;
 import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
 import com.miguelrosa.cinepass.Adapters.MovieSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.Domain.Movie;
-import com.miguelrosa.cinepass.Domain.MovieResponse;
-import com.miguelrosa.cinepass.Domain.PopularMoviesResponse;
-import com.miguelrosa.cinepass.Domain.TopRatedMoviesResponse;
-import com.miguelrosa.cinepass.Domain.UpComingMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
+import com.miguelrosa.cinepass.Domain.Responses.PopularMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.TopRatedMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.UpComingMoviesResponse;
 import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
 
 import retrofit2.Call;

@@ -1,11 +1,11 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Responses;
 
 import com.google.gson.annotations.SerializedName;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
 
 import java.util.List;
 
-public class PopularMoviesResponse {
-
+public class UpComingMoviesResponse {
     @SerializedName("page")
     private int page;
 
@@ -52,4 +52,3 @@ public class PopularMoviesResponse {
         this.totalResults = totalResults;
     }
 }
-

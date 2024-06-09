@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Models;
 
 public class Video {
     private String id;

@@ -4,16 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.miguelrosa.cinepass.Domain.WatchProviderResponse;
+import com.miguelrosa.cinepass.Domain.Responses.WatchProviderResponse;
 import com.miguelrosa.cinepass.R;
 
-import java.security.Provider;
 import java.util.List;
 
 public class WatchProviderAdapter extends RecyclerView.Adapter<WatchProviderAdapter.ProviderViewHolder> {

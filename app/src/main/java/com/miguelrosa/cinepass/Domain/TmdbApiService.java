@@ -1,5 +1,20 @@
 package com.miguelrosa.cinepass.Domain;
 
+import com.miguelrosa.cinepass.Domain.Models.CreateSessionBody;
+import com.miguelrosa.cinepass.Domain.Models.FavoriteRequest;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Domain.Responses.AccountDetailsResponse;
+import com.miguelrosa.cinepass.Domain.Responses.FavoriteResponse;
+import com.miguelrosa.cinepass.Domain.Responses.GenreResponse;
+import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
+import com.miguelrosa.cinepass.Domain.Responses.PopularMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.RequestTokenResponse;
+import com.miguelrosa.cinepass.Domain.Responses.SessionResponse;
+import com.miguelrosa.cinepass.Domain.Responses.TopRatedMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.UpComingMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.VideoResponse;
+import com.miguelrosa.cinepass.Domain.Responses.WatchProviderResponse;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Responses;
 
 public class FavoriteResponse {
     private int status_code;

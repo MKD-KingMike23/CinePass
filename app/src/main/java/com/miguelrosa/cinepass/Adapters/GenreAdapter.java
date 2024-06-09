@@ -1,6 +1,5 @@
 package com.miguelrosa.cinepass.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.miguelrosa.cinepass.Domain.Genre;
+import com.miguelrosa.cinepass.Domain.Models.Genre;
 import com.miguelrosa.cinepass.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHolder> {

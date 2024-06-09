@@ -1,5 +1,7 @@
 package com.miguelrosa.cinepass.Domain;
 
+import com.miguelrosa.cinepass.Domain.Responses.RequestTokenResponse;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Models;
 
 import com.google.gson.annotations.SerializedName;
 

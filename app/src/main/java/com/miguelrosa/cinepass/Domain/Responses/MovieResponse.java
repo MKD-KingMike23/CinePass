@@ -1,6 +1,7 @@
-package com.miguelrosa.cinepass.Domain;
+package com.miguelrosa.cinepass.Domain.Responses;
 
 import com.google.gson.annotations.SerializedName;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
 
 import java.util.List;
 

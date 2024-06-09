@@ -7,11 +7,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.miguelrosa.cinepass.Domain.AccountDetailsResponse;
+import com.miguelrosa.cinepass.Domain.Responses.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.Domain.CreateSessionBody;
-import com.miguelrosa.cinepass.Domain.RequestTokenResponse;
-import com.miguelrosa.cinepass.Domain.SessionResponse;
+import com.miguelrosa.cinepass.Domain.Models.CreateSessionBody;
+import com.miguelrosa.cinepass.Domain.Responses.RequestTokenResponse;
+import com.miguelrosa.cinepass.Domain.Responses.SessionResponse;
 import com.miguelrosa.cinepass.databinding.ActivityLoginBinding;
 
 import retrofit2.Call;

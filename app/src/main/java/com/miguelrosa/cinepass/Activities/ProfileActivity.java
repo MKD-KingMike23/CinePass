@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.miguelrosa.cinepass.Domain.AccountDetailsResponse;
+import com.miguelrosa.cinepass.Domain.Responses.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.databinding.ActivityProfileBinding;
 

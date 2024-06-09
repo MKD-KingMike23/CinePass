@@ -2,15 +2,15 @@ package com.miguelrosa.cinepass.Activities;
 
 import static android.view.View.GONE;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -20,23 +20,19 @@ import com.miguelrosa.cinepass.Adapters.GenreAdapter;
 import com.miguelrosa.cinepass.Adapters.TrailerAdapter;
 import com.miguelrosa.cinepass.Adapters.WatchProviderAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.Domain.FavoriteRequest;
-import com.miguelrosa.cinepass.Domain.FavoriteResponse;
-import com.miguelrosa.cinepass.Domain.Genre;
-import com.miguelrosa.cinepass.Domain.GenreResponse;
-import com.miguelrosa.cinepass.Domain.Movie;
-import com.miguelrosa.cinepass.Domain.MovieResponse;
-import com.miguelrosa.cinepass.Domain.Video;
-import com.miguelrosa.cinepass.Domain.VideoResponse;
-import com.miguelrosa.cinepass.Domain.WatchProviderResponse;
+import com.miguelrosa.cinepass.Domain.Models.FavoriteRequest;
+import com.miguelrosa.cinepass.Domain.Responses.FavoriteResponse;
+import com.miguelrosa.cinepass.Domain.Models.Genre;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
+import com.miguelrosa.cinepass.Domain.Models.Video;
+import com.miguelrosa.cinepass.Domain.Responses.VideoResponse;
+import com.miguelrosa.cinepass.Domain.Responses.WatchProviderResponse;
 import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityDetailBinding;
-import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
     private List<Genre> genreList = new ArrayList<>();
     private boolean isFavorite = false;
     private boolean isWatchlisted = false;
-    private int accountId = 21244357;
+    private int accountId;
     private String sessionId;
 
     @Override
@@ -62,6 +58,7 @@ public class DetailActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         sessionId = preferences.getString("sessionId", null);
+        accountId = preferences.getInt("accountId", -1);
 
         movieId = getIntent().getIntExtra("id", 0);
 

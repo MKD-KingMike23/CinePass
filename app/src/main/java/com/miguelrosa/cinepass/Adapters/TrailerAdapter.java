@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.miguelrosa.cinepass.Domain.Video;
+import com.miguelrosa.cinepass.Domain.Models.Video;
 import com.miguelrosa.cinepass.R;
 
 import java.util.List;

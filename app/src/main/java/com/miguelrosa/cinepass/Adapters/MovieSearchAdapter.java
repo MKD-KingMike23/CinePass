@@ -16,7 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.miguelrosa.cinepass.Activities.DetailActivity;
-import com.miguelrosa.cinepass.Domain.Movie;
+import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.R;
 
 import java.util.ArrayList;
