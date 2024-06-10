@@ -1,8 +1,13 @@
 package com.miguelrosa.cinepass.Activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +17,7 @@ import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.CreateSessionBody;
 import com.miguelrosa.cinepass.Domain.Responses.RequestTokenResponse;
 import com.miguelrosa.cinepass.Domain.Responses.SessionResponse;
+import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityLoginBinding;
 
 import retrofit2.Call;
@@ -38,6 +44,30 @@ public class LoginActivity extends AppCompatActivity {
                 fetchRequestToken();
             }
         });
+
+        binding.forgotpasstv.setOnClickListener(v -> {
+            showDialogWithWebView("https://www.themoviedb.org/reset-password?language=es");
+        });
+
+        binding.registertv.setOnClickListener(v -> {
+            showDialogWithWebView("https://www.themoviedb.org/signup?language=es");
+        });
+    }
+
+    private void showDialogWithWebView(String url) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_webview);
+
+        WebView webView = dialog.findViewById(R.id.webView);
+        ImageView closeImg = dialog.findViewById(R.id.imageViewBack);
+
+        webView.setWebViewClient(new WebViewClient());
+        webView.loadUrl(url);
+
+        closeImg.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.show();
     }
 
     private void fetchRequestToken() {

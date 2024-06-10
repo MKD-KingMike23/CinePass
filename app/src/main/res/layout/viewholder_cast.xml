@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp">
+
+    <ImageView
+        android:id="@+id/imageViewCast"
+        android:layout_width="120dp"
+        android:layout_height="170dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/castNametv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:text="TextView"
+        android:textSize="12sp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:maxLines="2"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewCast"
+        app:layout_constraintStart_toStartOf="@+id/imageViewCast"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCast" />
+
+    <TextView
+        android:id="@+id/characterNametv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#CDCDCD"
+        android:text="TextView"
+        android:textSize="11sp"
+        android:layout_marginTop="2dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        android:maxLines="2"
+        app:layout_constraintEnd_toEndOf="@+id/castNametv"
+        app:layout_constraintStart_toStartOf="@+id/castNametv"
+        app:layout_constraintTop_toBottomOf="@+id/castNametv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

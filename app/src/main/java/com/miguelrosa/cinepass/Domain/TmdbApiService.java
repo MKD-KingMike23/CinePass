@@ -4,6 +4,7 @@ import com.miguelrosa.cinepass.Domain.Models.CreateSessionBody;
 import com.miguelrosa.cinepass.Domain.Models.FavoriteRequest;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.Domain.Responses.AccountDetailsResponse;
+import com.miguelrosa.cinepass.Domain.Responses.CastResponse;
 import com.miguelrosa.cinepass.Domain.Responses.FavoriteResponse;
 import com.miguelrosa.cinepass.Domain.Responses.GenreResponse;
 import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
@@ -129,6 +130,12 @@ public interface TmdbApiService {
     Call<Void> deleteSession(
             @Query("api_key") String apiKey,
             @Query("session_id") String sessionId
+    );
+
+    @GET("movie/{movie_id}/credits")
+    Call<CastResponse> getMovieCredits(
+            @Path("movie_id") int movieId,
+            @Query("api_key") String apiKey
     );
 }
 

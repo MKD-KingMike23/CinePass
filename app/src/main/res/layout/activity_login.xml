@@ -83,9 +83,14 @@
 
             <TextView
                 android:id="@+id/forgotpasstv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
+                android:textStyle="italic"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:padding="3dp"
+                android:layout_gravity="center_horizontal"
                 android:text="¿Olvidaste tu contraseña?"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -97,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/orange_button_background"
                 android:text="Iniciar Sesión"
@@ -117,12 +122,18 @@
 
             <TextView
                 android:id="@+id/registertv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Registrate"
+                android:layout_marginTop="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:padding="2dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/edittext_background"
+                android:text="Regístrate"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

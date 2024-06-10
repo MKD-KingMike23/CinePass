@@ -16,11 +16,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.miguelrosa.cinepass.Adapters.CastAdapter;
 import com.miguelrosa.cinepass.Adapters.GenreAdapter;
 import com.miguelrosa.cinepass.Adapters.TrailerAdapter;
 import com.miguelrosa.cinepass.Adapters.WatchProviderAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
+import com.miguelrosa.cinepass.Domain.Models.Cast;
 import com.miguelrosa.cinepass.Domain.Models.FavoriteRequest;
+import com.miguelrosa.cinepass.Domain.Responses.CastResponse;
 import com.miguelrosa.cinepass.Domain.Responses.FavoriteResponse;
 import com.miguelrosa.cinepass.Domain.Models.Genre;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
@@ -40,15 +43,11 @@ import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
-    private int movieId;
-    private RecyclerView.Adapter genreAdapter;
-    private RecyclerView.Adapter trailerAdapter;
-    private RecyclerView.Adapter watchProviderAdapter;
-    private List<Genre> genreList = new ArrayList<>();
-    private boolean isFavorite = false;
-    private boolean isWatchlisted = false;
-    private int accountId;
+    private int movieId, accountId;
     private String sessionId;
+    private RecyclerView.Adapter genreAdapter, trailerAdapter, watchProviderAdapter, castAdapter;
+    private List<Genre> genreList = new ArrayList<>();
+    private boolean isFavorite = false, isWatchlisted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +68,13 @@ public class DetailActivity extends AppCompatActivity {
         genreAdapter = new GenreAdapter(genreList);
         binding.genreRecycler.setAdapter(genreAdapter);
 
+        binding.rvCast.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
         binding.imageViewBack.setOnClickListener(v -> finish());
         fetchMovieDetails(movieId);
         fetchMovieTrailers(movieId);
         fetchWatchProviders(movieId);
+        fetchMovieCast(movieId);
 
         binding.imageViewFav.setOnClickListener(v -> toggleFavorite());
         binding.imageViewWatchlist.setOnClickListener(v -> toggleWatchlist());
@@ -204,6 +206,32 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchMovieCast(int movieId) {
+        String apiKey = ApiClient.getApiKey();
+        Call<CastResponse> call = ApiClient.getTmdbApiService().getMovieCredits(movieId, apiKey);
+
+        call.enqueue(new Callback<CastResponse>() {
+            @Override
+            public void onResponse(Call<CastResponse> call, Response<CastResponse> response) {
+                if (response.isSuccessful()) {
+                    CastResponse castResponse = response.body();
+                    if (castResponse != null) {
+                        List<Cast> castList = castResponse.getCast();
+                        castAdapter = new CastAdapter(castList, DetailActivity.this);
+                        binding.rvCast.setAdapter(castAdapter);
+                    }
+                } else {
+                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CastResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void toggleFavorite() {
         String apiKey = ApiClient.getApiKey();
         FavoriteRequest request = new FavoriteRequest("movie", movieId, !isFavorite, !isWatchlisted);
@@ -215,7 +243,11 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     isFavorite = !isFavorite;
                     updateFavoriteIcon();
-                    Toast.makeText(DetailActivity.this, "Película añadida a lista de Favoritos", Toast.LENGTH_SHORT).show();
+                    if (isFavorite) {
+                        Toast.makeText(DetailActivity.this, "Película añadida a Favoritos", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(DetailActivity.this, "Película eliminada de Favoritos", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
                 }
@@ -239,7 +271,11 @@ public class DetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     isWatchlisted = !isWatchlisted;
                     updateWatchlistIcon();
-                    Toast.makeText(DetailActivity.this, "Película añadida a la Watchlist", Toast.LENGTH_SHORT).show();
+                    if (isWatchlisted) {
+                        Toast.makeText(DetailActivity.this, "Película añadida a Pendientes", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(DetailActivity.this, "Película eliminada de Pendientes", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
                 }
