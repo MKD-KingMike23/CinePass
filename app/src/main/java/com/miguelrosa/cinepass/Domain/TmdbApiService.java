@@ -53,10 +53,6 @@ public interface TmdbApiService {
             @Query("language") String language
     );
 
-    @GET("genre/movie/list")
-    Call<GenreResponse> getGenres(
-            @Query("api_key") String apiKey
-    );
     @POST("account/{account_id}/favorite")
     Call<FavoriteResponse> markAsFavorite(
             @Path("account_id") int accountId,

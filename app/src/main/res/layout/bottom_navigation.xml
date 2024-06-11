@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/perfilButton"
+        android:icon="@drawable/outline_account_circle_24"
+        android:title="Perfil" />
+
+    <item
+        android:id="@+id/dashboardButton"
+        android:icon="@drawable/float_icon"
+        android:title="Inicio" />
+
+    <item
+        android:id="@+id/listasButton"
+        android:icon="@drawable/baseline_format_list_bulleted_24"
+        android:title="Listas" />
+</menu>
