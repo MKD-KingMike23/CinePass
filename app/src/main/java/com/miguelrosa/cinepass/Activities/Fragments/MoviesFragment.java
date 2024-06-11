@@ -2,7 +2,6 @@ package com.miguelrosa.cinepass.Activities.Fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,9 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.miguelrosa.cinepass.Activities.DashboardActivity;
-import com.miguelrosa.cinepass.Activities.ListsActivity;
-import com.miguelrosa.cinepass.Activities.ProfileActivity;
 import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
 import com.miguelrosa.cinepass.Adapters.MovieSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
@@ -28,7 +24,6 @@ import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
 import com.miguelrosa.cinepass.Domain.Responses.PopularMoviesResponse;
 import com.miguelrosa.cinepass.Domain.Responses.TopRatedMoviesResponse;
 import com.miguelrosa.cinepass.Domain.Responses.UpComingMoviesResponse;
-import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.FragmentMoviesBinding;
 
 import java.util.List;
@@ -41,6 +36,10 @@ public class MoviesFragment extends Fragment {
     private FragmentMoviesBinding binding;
     private RecyclerView.Adapter adapterBestMovies, adapterUpComing, adapterTopRated, movieSearchAdapter;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -55,16 +54,6 @@ public class MoviesFragment extends Fragment {
         binding.rv1.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rv2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rv3.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-
-        binding.perfil.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), ProfileActivity.class);
-            startActivity(intent);
-        });
-
-        binding.favoritos.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), ListsActivity.class);
-            startActivity(intent);
-        });
 
         binding.rvsearch.setLayoutManager(new LinearLayoutManager(requireContext()));
         movieSearchAdapter = new MovieSearchAdapter();

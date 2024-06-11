@@ -1,12 +1,19 @@
-package com.miguelrosa.cinepass.Activities;
+package com.miguelrosa.cinepass.Activities.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -17,7 +24,7 @@ import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
 import com.miguelrosa.cinepass.R;
-import com.miguelrosa.cinepass.databinding.ActivityListsBinding;
+import com.miguelrosa.cinepass.databinding.FragmentListsBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,29 +33,39 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListsActivity extends AppCompatActivity {
-    private ActivityListsBinding binding;
+public class ListsFragment extends Fragment {
+    private FragmentListsBinding binding;
     private ListAdapter listAdapter;
     private List<Movie> movieList = new ArrayList<>();
     private Spinner listSelectorSpinner;
     private String sessionId;
     private int accountId;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityListsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public static ListsFragment newInstance() {
+        ListsFragment fragment = new ListsFragment();
+        return fragment;
+    }
 
-        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentListsBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         sessionId = preferences.getString("sessionId", null);
         accountId = preferences.getInt("accountId", -1);
 
-        binding.favoriteMoviesRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        binding.favoriteMoviesRecycler.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         listAdapter = new ListAdapter(movieList);
         binding.favoriteMoviesRecycler.setAdapter(listAdapter);
 
-        String lista = getIntent().getStringExtra("lista");
+        String lista = getActivity().getIntent().getStringExtra("lista");
         if (lista != null) {
             if (lista.equals("watchlist")) {
                 fetchWatchlistMovies(sessionId);
@@ -59,20 +76,12 @@ public class ListsActivity extends AppCompatActivity {
 
         setupListSelectorSpinner();
 
-        binding.inicio.setOnClickListener(v -> {
-            Intent intent = new Intent(ListsActivity.this, DashboardActivity.class);
-            startActivity(intent);
-        });
-
-        binding.perfil.setOnClickListener(v -> {
-            Intent intent = new Intent(ListsActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        });
+        return view;
     }
 
     private void setupListSelectorSpinner() {
         listSelectorSpinner = binding.listSelectorSpinner;
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.lists_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         listSelectorSpinner.setAdapter(adapter);
@@ -118,14 +127,14 @@ public class ListsActivity extends AppCompatActivity {
                     }
                 } else {
                     binding.progressBarFavorites.setVisibility(View.VISIBLE);
-                    Toast.makeText(ListsActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
                 binding.progressBarFavorites.setVisibility(View.VISIBLE);
-                Toast.makeText(ListsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -151,14 +160,14 @@ public class ListsActivity extends AppCompatActivity {
                     }
                 } else {
                     binding.progressBarFavorites.setVisibility(View.VISIBLE);
-                    Toast.makeText(ListsActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
                 binding.progressBarFavorites.setVisibility(View.VISIBLE);
-                Toast.makeText(ListsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

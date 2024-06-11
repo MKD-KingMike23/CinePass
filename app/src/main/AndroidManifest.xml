@@ -17,33 +17,11 @@
         android:theme="@style/Theme.CinePass"
         tools:targetApi="34">
         <activity
-            android:name=".Activities.ProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.ListsActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="auth"
-                    android:scheme="cinepass" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".Activities.DetailActivity"
             android:configChanges="orientation|keyboardHidden|uiMode"/>
-
-        <activity
-            android:name=".Activities.DashboardActivity"
-            android:exported="false" />
 
         <activity
             android:name=".Activities.IntroActivity"

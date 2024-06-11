@@ -3,16 +3,20 @@
 
     <item
         android:id="@+id/perfilButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:icon="@drawable/outline_account_circle_24"
         android:title="Perfil" />
-
     <item
         android:id="@+id/dashboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:icon="@drawable/float_icon"
         android:title="Inicio" />
-
     <item
         android:id="@+id/listasButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:icon="@drawable/baseline_format_list_bulleted_24"
         android:title="Listas" />
 </menu>

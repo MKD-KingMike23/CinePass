@@ -1,14 +1,24 @@
 package com.miguelrosa.cinepass.Activities;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import static android.app.PendingIntent.getActivity;
+
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.navigation.NavigationBarView;
+import com.miguelrosa.cinepass.Activities.Fragments.DashboardFragment;
+import com.miguelrosa.cinepass.Activities.Fragments.ListsFragment;
+import com.miguelrosa.cinepass.Activities.Fragments.ProfileFragment;
+import com.miguelrosa.cinepass.R;
 import com.miguelrosa.cinepass.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener{
     private ActivityMainBinding binding;
 
     @Override
@@ -17,28 +27,48 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        checkLoginStatus();
-    }
+        replaceFragment(new DashboardFragment());
+        binding.bottomNavigation.setOnItemSelectedListener(this);
 
-    private void checkLoginStatus() {
-        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
-        String sessionId = preferences.getString("sessionId", null);
-        int accountId = preferences.getInt("accountId", -1);
-
-        if (sessionId != null && accountId != -1) {
-            navigateToMainScreen();
-        } else {
-            navigateToLoginScreen();
+        String fragment = getIntent().getStringExtra("fragment");
+        if (fragment != null) {
+            if (fragment.equals("listas")) {
+                replaceFragment(new ListsFragment());
+            } else {
+                replaceFragment(new DashboardFragment());
+            }
         }
     }
 
-    private void navigateToMainScreen() {
-        startActivity(new Intent(MainActivity.this, DashboardActivity.class));
-        finish();
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container,fragment);
+        fragmentTransaction.commit();
     }
 
-    private void navigateToLoginScreen() {
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        finish();
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        int IdBotonPulsado = menuItem.getItemId();
+
+        int[] optionMenu = new int[binding.bottomNavigation.getMenu().size()];
+        for (int i=0; i<binding.bottomNavigation.getMenu().size(); i++) {
+            optionMenu[i]=binding.bottomNavigation.getMenu().getItem(i).getItemId();
+        }
+
+        if(optionMenu[0]==IdBotonPulsado){
+            replaceFragment(new ProfileFragment());
+        }
+
+        if(optionMenu[1]==IdBotonPulsado) {
+            replaceFragment(new DashboardFragment());
+        }
+
+        if (optionMenu[2]==IdBotonPulsado) {
+            replaceFragment(new ListsFragment());
+        }
+
+        return true;
     }
 }

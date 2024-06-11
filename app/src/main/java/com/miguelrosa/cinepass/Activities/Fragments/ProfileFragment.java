@@ -1,38 +1,58 @@
-package com.miguelrosa.cinepass.Activities;
+package com.miguelrosa.cinepass.Activities.Fragments;
+
+import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.miguelrosa.cinepass.Activities.LoginActivity;
+import com.miguelrosa.cinepass.Activities.MainActivity;
 import com.miguelrosa.cinepass.Domain.Responses.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.databinding.ActivityProfileBinding;
+import com.miguelrosa.cinepass.databinding.FragmentProfileBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ProfileActivity extends AppCompatActivity {
-    private ActivityProfileBinding binding;
+public class ProfileFragment extends Fragment {
+    private FragmentProfileBinding binding;
     private String sessionId;
 
+    public static ProfileFragment newInstance() {
+        ProfileFragment fragment = new ProfileFragment();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityProfileBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         sessionId = getSessionId();
 
         fetchAccountDetails();
         initializebuttons();
+
+        return view;
     }
 
     private void fetchAccountDetails() {
@@ -49,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
                         binding.usernametv.setText(accountDetails.getUsername());
 
                         String avatarPath = accountDetails.getAvatar().getTmdb().getAvatarPath();
-                        Glide.with(ProfileActivity.this)
+                        Glide.with(ProfileFragment.this)
                                 .load("https://image.tmdb.org/t/p/w500" + avatarPath)
                                 .into(binding.avatarImage);
                     }
@@ -58,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<AccountDetailsResponse> call, @NonNull Throwable t) {
-                Toast.makeText(ProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -72,31 +92,33 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     clearSession();
-                    Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(requireContext(), LoginActivity.class);
                     startActivity(intent);
-                    finish();
+                    getActivity().finish();
                 } else {
-                    Toast.makeText(ProfileActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Toast.makeText(ProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void initializebuttons() {
         binding.watchlistLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ListsActivity.class);
+            Intent intent = new Intent(requireContext(), MainActivity.class);
             intent.putExtra("lista", "watchlist");
+            intent.putExtra("fragment", "listas");
             startActivity(intent);
         });
 
         binding.favoritesLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ListsActivity.class);
+            Intent intent = new Intent(requireContext(), MainActivity.class);
             intent.putExtra("lista", "favoritos");
+            intent.putExtra("fragment", "listas");
             startActivity(intent);
         });
 
@@ -108,27 +130,17 @@ public class ProfileActivity extends AppCompatActivity {
         binding.closesessionbtn.setOnClickListener(v -> {
             logout();
         });
-
-        binding.inicio.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, DashboardActivity.class);
-            startActivity(intent);
-        });
-
-        binding.favoritos.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, ListsActivity.class);
-            startActivity(intent);
-        });
     }
 
     private void clearSession() {
-        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove("sessionId");
         editor.apply();
     }
 
     private String getSessionId() {
-        SharedPreferences preferences = getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences("CinePassPrefs", MODE_PRIVATE);
         return preferences.getString("sessionId", null);
     }
 }
