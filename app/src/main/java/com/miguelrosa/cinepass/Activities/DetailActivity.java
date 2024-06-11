@@ -3,9 +3,15 @@ package com.miguelrosa.cinepass.Activities;
 import static android.view.View.GONE;
 
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,7 +47,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerClickListener{
     private ActivityDetailBinding binding;
     private int movieId, accountId;
     private String sessionId;
@@ -80,6 +86,11 @@ public class DetailActivity extends AppCompatActivity {
         binding.imageViewWatchlist.setOnClickListener(v -> toggleWatchlist());
     }
 
+    @Override
+    public void onTrailerClicked(String videoUrl) {
+        showTrailer(videoUrl);
+    }
+
     private void fetchMovieDetails(int movieId) {
         binding.progressBarDetail.setVisibility(View.VISIBLE);
         binding.scrollViewDetail.setVisibility(GONE);
@@ -116,8 +127,6 @@ public class DetailActivity extends AppCompatActivity {
                         if (genres != null) {
                             genreAdapter = new GenreAdapter(genres);
                             binding.genreRecycler.setAdapter(genreAdapter);
-                        } else {
-                            Log.i("DetailActivity", "La película no tiene géneros asociados");
                         }
                         checkIfFavorite(movieId, sessionId);
                         checkIfWatchlist(movieId, sessionId);
@@ -157,7 +166,7 @@ public class DetailActivity extends AppCompatActivity {
                             binding.textView23.setVisibility(GONE);
                         }
 
-                        trailerAdapter = new TrailerAdapter(trailers);
+                        trailerAdapter = new TrailerAdapter(trailers, DetailActivity.this);
                         binding.trailersRecycler.setAdapter(trailerAdapter);
                     }
                 } else {
@@ -340,13 +349,11 @@ public class DetailActivity extends AppCompatActivity {
                             if (movie.getId() == movieId) {
                                 isWatchlisted = true;
                                 updateWatchlistIcon();
-                                Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isWatchlisted);
                                 return;
                             }
                         }
                     }
                     isWatchlisted = false;
-                    Log.i("CHECKEO","EL CHECKEO FUNCIONA: " + isWatchlisted);
                     updateWatchlistIcon();
                 } else {
                     Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -359,6 +366,40 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void showTrailer(String videoUrl) {
+        WebSettings webSettings = binding.trailerWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        binding.trailerWebView.setWebViewClient(new WebViewClient());
+        binding.trailerWebView.setWebChromeClient(new MyWebChromeClient());
+
+        String html = "<html><body style='margin:0;padding:0;'><iframe width=\"100%\" height=\"100%\" src=\"" + videoUrl + "\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+        binding.trailerWebView.loadData(html, "text/html", "utf-8");
+        binding.trailerWebView.setVisibility(View.VISIBLE);
+    }
+
+    private class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            super.onShowCustomView(view, callback);
+
+            int currentOrientation = getResources().getConfiguration().orientation;
+            if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                binding.trailerWebView.setVisibility(View.VISIBLE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } else {
+                binding.trailerWebView.setVisibility(View.INVISIBLE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            }
+        }
+
+        @Override
+        public void onHideCustomView() {
+            super.onHideCustomView();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
+    }
+
 
     private void updateFavoriteIcon() {
         if (isFavorite) {

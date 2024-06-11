@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -191,8 +190,6 @@ public class DashboardActivity extends AppCompatActivity {
                         binding.textView9.setVisibility(View.INVISIBLE);
                         binding.textView10.setVisibility(View.INVISIBLE);
                         binding.textView11.setVisibility(View.INVISIBLE);
-
-                        Log.i("RESULTADOS FILTRADOS", movieResponse.getResults().toString());
 
                         if (movieResponse.getResults().toString().equals("[]")) {
                             fetchMainMovies();

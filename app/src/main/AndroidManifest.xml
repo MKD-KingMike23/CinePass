@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
+        android:enableOnBackInvokedCallback="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CinePass"
-        tools:targetApi="31">
+        tools:targetApi="34">
         <activity
             android:name=".Activities.ProfileActivity"
             android:exported="false" />
@@ -35,12 +36,15 @@
                     android:scheme="cinepass" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activities.DetailActivity"
-            android:exported="false" />
+            android:configChanges="orientation|keyboardHidden|uiMode"/>
+
         <activity
             android:name=".Activities.DashboardActivity"
             android:exported="false" />
+
         <activity
             android:name=".Activities.IntroActivity"
             android:exported="true">
@@ -50,7 +54,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.LoginActivity" />
+
+        <activity android:name=".Activities.LoginActivity"/>
     </application>
 
 </manifest>

@@ -22,10 +22,20 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <WebView
+                android:id="@+id/trailerWebView"
+                android:layout_width="match_parent"
+                android:layout_height="340dp"
+                android:elevation="1dp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/picDetail"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="340dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -70,6 +80,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:padding="8dp"
+                    android:elevation="2dp"
                     android:src="@drawable/back"
                     android:background="@drawable/edittext_background"
                     app:layout_constraintBottom_toBottomOf="parent"

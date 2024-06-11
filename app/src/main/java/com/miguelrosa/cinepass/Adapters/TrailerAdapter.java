@@ -1,6 +1,8 @@
 package com.miguelrosa.cinepass.Adapters;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.miguelrosa.cinepass.Activities.DetailActivity;
 import com.miguelrosa.cinepass.Domain.Models.Video;
 import com.miguelrosa.cinepass.R;
 
@@ -18,9 +22,11 @@ import java.util.List;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
     private List<Video> trailers;
+    private Context context;
 
-    public TrailerAdapter(List<Video> trailers) {
+    public TrailerAdapter(List<Video> trailers, Context context) {
         this.trailers = trailers;
+        this.context = context;
     }
 
     @NonNull
@@ -39,8 +45,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
                 .into(holder.thumbnail);
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + trailer.getKey()));
-            holder.itemView.getContext().startActivity(intent);
+            if (context instanceof DetailActivity) {
+                ((DetailActivity) context).onTrailerClicked("https://www.youtube.com/embed/" + trailer.getKey() + "?autoplay=1&fs=1");
+            }
         });
     }
 
@@ -56,5 +63,9 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
             super(itemView);
             thumbnail = itemView.findViewById(R.id.thumbnail);
         }
+    }
+
+    public interface TrailerClickListener {
+        void onTrailerClicked(String videoUrl);
     }
 }
