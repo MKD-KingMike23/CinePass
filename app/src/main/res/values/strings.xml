@@ -2,9 +2,9 @@
     <string name="app_name">CinePass</string>
 
     <string-array name="lists_array">
-        <item>Selecciona una lista de películas...</item>
+        <item>Selecciona una lista de Películas o Series</item>
         <item>Favoritos</item>
-        <item>Watchlist</item>
+        <item>Pendientes</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

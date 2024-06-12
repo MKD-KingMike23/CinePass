@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
+import com.miguelrosa.cinepass.Adapters.MovieAdapter;
 import com.miguelrosa.cinepass.Adapters.MovieSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
@@ -92,7 +92,7 @@ public class MoviesFragment extends Fragment {
                     PopularMoviesResponse popularMoviesResponse = response.body();
                     if (popularMoviesResponse != null) {
                         List<Movie> movies = popularMoviesResponse.getResults();
-                        adapterBestMovies = new FilmListAdapter(movies);
+                        adapterBestMovies = new MovieAdapter(movies);
                         binding.rv1.setAdapter(adapterBestMovies);
                         binding.progressBar1.setVisibility(View.GONE);
                     }
@@ -122,7 +122,7 @@ public class MoviesFragment extends Fragment {
                     TopRatedMoviesResponse topratedMoviesResponse = response.body();
                     if (topratedMoviesResponse != null) {
                         List<Movie> movies = topratedMoviesResponse.getResults();
-                        adapterTopRated = new FilmListAdapter(movies);
+                        adapterTopRated = new MovieAdapter(movies);
                         binding.rv2.setAdapter(adapterTopRated);
                         binding.progressBar2.setVisibility(View.GONE);
                     }
@@ -152,7 +152,7 @@ public class MoviesFragment extends Fragment {
                     UpComingMoviesResponse upcomingMoviesResponse = response.body();
                     if (upcomingMoviesResponse != null) {
                         List<Movie> movies = upcomingMoviesResponse.getResults();
-                        adapterUpComing = new FilmListAdapter(movies);
+                        adapterUpComing = new MovieAdapter(movies);
                         binding.rv3.setAdapter(adapterUpComing);
                         binding.progressBar3.setVisibility(View.GONE);
                     }

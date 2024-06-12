@@ -1,6 +1,7 @@
 package com.miguelrosa.cinepass.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +36,19 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CastViewHolder holder, int position) {
-        Cast cast = castList.get(position);
-        holder.actorName.setText(cast.getName());
-        holder.characterName.setText(cast.getCharacter());
+        if(castList.get(position).getProfilePath()!=null & castList.get(position).getName()!=null & castList.get(position).getCharacter()!=null){
+            Cast cast = castList.get(position);
+            holder.actorName.setText(cast.getName());
+            holder.characterName.setText(cast.getCharacter());
 
-        RequestOptions requestOptions = new RequestOptions().centerCrop();
-        Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w500" + cast.getProfilePath())
-                .apply(requestOptions)
-                .into(holder.actorImage);
+            RequestOptions requestOptions = new RequestOptions().centerCrop();
+            Glide.with(context)
+                    .load("https://image.tmdb.org/t/p/w500" + cast.getProfilePath())
+                    .apply(requestOptions)
+                    .into(holder.actorImage);
+        } else {
+            holder.itemView.setVisibility(View.GONE);
+        }
     }
 
     @Override

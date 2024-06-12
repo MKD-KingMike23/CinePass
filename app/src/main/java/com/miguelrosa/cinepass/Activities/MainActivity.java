@@ -28,14 +28,18 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         setContentView(binding.getRoot());
 
         replaceFragment(new DashboardFragment());
+        binding.bottomNavigation.setSelectedItemId(R.id.dashboardButton);
+
         binding.bottomNavigation.setOnItemSelectedListener(this);
 
         String fragment = getIntent().getStringExtra("fragment");
         if (fragment != null) {
             if (fragment.equals("listas")) {
                 replaceFragment(new ListsFragment());
+                binding.bottomNavigation.setSelectedItemId(R.id.listasButton);
             } else {
                 replaceFragment(new DashboardFragment());
+                binding.bottomNavigation.setSelectedItemId(R.id.dashboardButton);
             }
         }
     }

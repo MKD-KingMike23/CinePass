@@ -16,68 +16,69 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.miguelrosa.cinepass.Activities.MovieDetailActivity;
-import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Activities.TVSeriesDetailActivity;
+import com.miguelrosa.cinepass.Domain.Models.TVSeries;
 import com.miguelrosa.cinepass.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieViewHolder> {
+public class TVSeriesSearchAdapter extends RecyclerView.Adapter<TVSeriesSearchAdapter.TVSeriesViewHolder> {
 
-    private List<Movie> movies;
+    private List<TVSeries> tvseries;
     private Context context;
 
-    public MovieSearchAdapter() {
-        this.movies = new ArrayList<>();
+    public TVSeriesSearchAdapter() {
+        this.tvseries = new ArrayList<>();
     }
 
-    public MovieSearchAdapter(List<Movie> movies) {
-        this.movies = movies;
+    public TVSeriesSearchAdapter(List<TVSeries> tvSeries) {
+        this.tvseries = tvSeries;
     }
 
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TVSeriesSearchAdapter.TVSeriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_favorite, parent, false);
-        return new MovieViewHolder(view);
+        return new TVSeriesSearchAdapter.TVSeriesViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Movie movie = movies.get(position);
+    public void onBindViewHolder(@NonNull TVSeriesSearchAdapter.TVSeriesViewHolder holder, int position) {
+        TVSeries tvSeries = tvseries.get(position);
 
-        holder.titleTxt.setText(movie.getTitle());
-        holder.favTxt.setText(String.valueOf(movie.getVoteAverage()));
+        holder.titleTxt.setText(tvSeries.getName());
+        holder.favTxt.setText(String.valueOf(tvSeries.getVoteAverage()));
         RequestOptions requestOptions = new RequestOptions().transform(new CenterCrop(), new RoundedCorners(30));
 
         Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
+                .load("https://image.tmdb.org/t/p/w500" + tvSeries.getPosterPath())
                 .apply(requestOptions)
                 .into(holder.pic);
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), MovieDetailActivity.class);
-            intent.putExtra("id", movie.getId());
+            Intent intent = new Intent(holder.itemView.getContext(), TVSeriesDetailActivity.class);
+            intent.putExtra("id", tvSeries.getId());
             context.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return tvseries.size();
     }
 
-    public void updateMovies(List<Movie> newMovies) {
-        this.movies = newMovies;
+    public void updateTVSeries(List<TVSeries> newTVSeries) {
+        this.tvseries = newTVSeries;
         notifyDataSetChanged();
     }
 
-    static class MovieViewHolder extends RecyclerView.ViewHolder {
+    static class TVSeriesViewHolder extends RecyclerView.ViewHolder {
         TextView titleTxt, favTxt;
         ImageView pic;
 
-        public MovieViewHolder(@NonNull View itemView) {
+        public TVSeriesViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTxt = itemView.findViewById(R.id.titleTxt);
             favTxt = itemView.findViewById(R.id.favTxt);
@@ -85,3 +86,4 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
         }
     }
 }
+

@@ -7,11 +7,9 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.miguelrosa.cinepass.Adapters.CastAdapter;
 import com.miguelrosa.cinepass.Adapters.GenreAdapter;
-import com.miguelrosa.cinepass.Adapters.TrailerAdapter;
+import com.miguelrosa.cinepass.Adapters.MovieTrailerAdapter;
 import com.miguelrosa.cinepass.Adapters.WatchProviderAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.Cast;
@@ -47,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DetailActivity extends AppCompatActivity implements TrailerAdapter.TrailerClickListener{
+public class MovieDetailActivity extends AppCompatActivity implements MovieTrailerAdapter.TrailerClickListener{
     private ActivityDetailBinding binding;
     private int movieId, accountId;
     private String sessionId;
@@ -108,17 +106,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                         binding.progressBarDetail.setVisibility(GONE);
                         binding.scrollViewDetail.setVisibility(View.VISIBLE);
 
-                        binding.movieNameTxt.setText(movie.getTitle());
-                        binding.movieSummary.setText(movie.getOverview());
-                        binding.movieReleaseDate.setText(movie.getReleaseDate());
-                        binding.movieRuntime.setText(String.valueOf(movie.getRuntime())+ " min");
-                        binding.movieStar.setText(String.valueOf(movie.getVoteAverage()));
-                        binding.movieTime.setText(String.valueOf(movie.getVoteCount()));
+                        binding.NameTxt.setText(movie.getTitle());
+                        binding.Summary.setText(movie.getOverview());
+                        binding.ReleaseDate.setText(movie.getReleaseDate());
+                        binding.Runtime.setText(String.valueOf(movie.getRuntime())+ " min");
+                        binding.Star.setText(String.valueOf(movie.getVoteAverage()));
+                        binding.Time.setText(String.valueOf(movie.getVoteCount()));
 
                         RequestOptions requestOptions = new RequestOptions();
                         requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(30));
 
-                        Glide.with(DetailActivity.this)
+                        Glide.with(MovieDetailActivity.this)
                                 .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
                                 .apply(requestOptions)
                                 .into(binding.picDetail);
@@ -132,13 +130,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                         checkIfWatchlist(movieId, sessionId);
                     }
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -166,17 +164,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                             binding.textView23.setVisibility(GONE);
                         }
 
-                        trailerAdapter = new TrailerAdapter(trailers, DetailActivity.this);
+                        trailerAdapter = new MovieTrailerAdapter(trailers, MovieDetailActivity.this);
                         binding.trailersRecycler.setAdapter(trailerAdapter);
                     }
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<VideoResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -204,13 +202,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                         binding.textView24.setVisibility(GONE);
                     }
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<WatchProviderResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -226,17 +224,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     CastResponse castResponse = response.body();
                     if (castResponse != null) {
                         List<Cast> castList = castResponse.getCast();
-                        castAdapter = new CastAdapter(castList, DetailActivity.this);
+                        castAdapter = new CastAdapter(castList, MovieDetailActivity.this);
                         binding.rvCast.setAdapter(castAdapter);
                     }
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CastResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -253,18 +251,18 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     isFavorite = !isFavorite;
                     updateFavoriteIcon();
                     if (isFavorite) {
-                        Toast.makeText(DetailActivity.this, "Película añadida a Favoritos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MovieDetailActivity.this, "Película añadida a Favoritos", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(DetailActivity.this, "Película eliminada de Favoritos", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MovieDetailActivity.this, "Película eliminada de Favoritos", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FavoriteResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: 2" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: 2" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -281,18 +279,18 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     isWatchlisted = !isWatchlisted;
                     updateWatchlistIcon();
                     if (isWatchlisted) {
-                        Toast.makeText(DetailActivity.this, "Película añadida a Pendientes", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MovieDetailActivity.this, "Película añadida a Pendientes", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(DetailActivity.this, "Película eliminada de Pendientes", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MovieDetailActivity.this, "Película eliminada de Pendientes", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: 1" + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FavoriteResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: 2" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: 2" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -321,13 +319,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     isFavorite = false;
                     updateFavoriteIcon();
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -356,13 +354,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     isWatchlisted = false;
                     updateWatchlistIcon();
                 } else {
-                    Toast.makeText(DetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovieDetailActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MovieDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -9,9 +9,6 @@ public class Movie {
     @SerializedName("poster_path")
     private String posterPath;
 
-    @SerializedName("adult")
-    private boolean adult;
-
     @SerializedName("overview")
     private String overview;
 
@@ -24,20 +21,8 @@ public class Movie {
     @SerializedName("id")
     private int id;
 
-    @SerializedName("original_title")
-    private String originalTitle;
-
-    @SerializedName("original_language")
-    private String originalLanguage;
-
     @SerializedName("title")
     private String title;
-
-    @SerializedName("backdrop_path")
-    private String backdropPath;
-
-    @SerializedName("popularity")
-    private double popularity;
 
     @SerializedName("runtime")
     private double runtime;
@@ -59,14 +44,6 @@ public class Movie {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public boolean isAdult() {
-        return adult;
-    }
-
-    public void setAdult(boolean adult) {
-        this.adult = adult;
     }
 
     public String getOverview() {
@@ -101,44 +78,12 @@ public class Movie {
         this.id = id;
     }
 
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
-    }
-
-    public String getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
-    }
-
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
-    }
-
-    public double getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(double popularity) {
-        this.popularity = popularity;
     }
 
     public double getRuntime() {

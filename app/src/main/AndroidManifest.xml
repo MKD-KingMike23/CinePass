@@ -20,7 +20,10 @@
             android:name=".Activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.DetailActivity"
+            android:name=".Activities.MovieDetailActivity"
+            android:configChanges="orientation|keyboardHidden|uiMode"/>
+        <activity
+            android:name=".Activities.TVSeriesDetailActivity"
             android:configChanges="orientation|keyboardHidden|uiMode"/>
 
         <activity

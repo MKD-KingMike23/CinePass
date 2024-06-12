@@ -15,33 +15,34 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.miguelrosa.cinepass.Activities.DetailActivity;
+import com.miguelrosa.cinepass.Activities.MovieDetailActivity;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.R;
 
 import java.util.List;
 
-public class FilmListAdapter extends RecyclerView.Adapter<FilmListAdapter.ViewHolder> {
+public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder>{
     List<Movie> items;
     Context context;
 
-    public FilmListAdapter(List<Movie> items) {
+    public MovieListAdapter(List<Movie> items) {
         this.items = items;
     }
 
     @NonNull
     @Override
-    public FilmListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context= parent.getContext();
-        View inflate= LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_film,parent,false);
-        return new ViewHolder(inflate);
+        View inflate= LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_favorite,parent,false);
+        return new MovieListAdapter.ViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FilmListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
         Movie movie = items.get(position);
 
         holder.titleTxt.setText(movie.getTitle());
+        holder.favTxt.setText(String.valueOf(movie.getVoteAverage()));
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(30));
 
@@ -51,11 +52,11 @@ public class FilmListAdapter extends RecyclerView.Adapter<FilmListAdapter.ViewHo
                 .into(holder.pic);
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), DetailActivity.class);
+            Intent intent = new Intent(holder.itemView.getContext(), MovieDetailActivity.class);
             intent.putExtra("id", movie.getId());
             context.startActivity(intent);
         });
-        }
+    }
 
     @Override
     public int getItemCount() {
@@ -63,11 +64,12 @@ public class FilmListAdapter extends RecyclerView.Adapter<FilmListAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView titleTxt;
+        TextView titleTxt, favTxt;
         ImageView pic;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTxt = itemView.findViewById(R.id.titleTxt);
+            favTxt = itemView.findViewById(R.id.favTxt);
             pic = itemView.findViewById(R.id.imageView7);
         }
     }

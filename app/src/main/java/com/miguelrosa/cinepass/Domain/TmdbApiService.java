@@ -3,16 +3,20 @@ package com.miguelrosa.cinepass.Domain;
 import com.miguelrosa.cinepass.Domain.Models.CreateSessionBody;
 import com.miguelrosa.cinepass.Domain.Models.FavoriteRequest;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Domain.Models.TVSeries;
 import com.miguelrosa.cinepass.Domain.Responses.AccountDetailsResponse;
 import com.miguelrosa.cinepass.Domain.Responses.CastResponse;
 import com.miguelrosa.cinepass.Domain.Responses.FavoriteResponse;
-import com.miguelrosa.cinepass.Domain.Responses.GenreResponse;
 import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
 import com.miguelrosa.cinepass.Domain.Responses.PopularMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.PopularTVSeriesResponse;
 import com.miguelrosa.cinepass.Domain.Responses.RequestTokenResponse;
 import com.miguelrosa.cinepass.Domain.Responses.SessionResponse;
+import com.miguelrosa.cinepass.Domain.Responses.TVSeriesResponse;
 import com.miguelrosa.cinepass.Domain.Responses.TopRatedMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.TopRatedTVSeriesResponse;
 import com.miguelrosa.cinepass.Domain.Responses.UpComingMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.UpComingTVSeriesResponse;
 import com.miguelrosa.cinepass.Domain.Responses.VideoResponse;
 import com.miguelrosa.cinepass.Domain.Responses.WatchProviderResponse;
 
@@ -133,5 +137,73 @@ public interface TmdbApiService {
             @Path("movie_id") int movieId,
             @Query("api_key") String apiKey
     );
+
+    @GET("tv/{series_id}")
+    Call<TVSeries> getTVSeriesDetails(
+            @Path("series_id") int seriesId,
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
+    @GET("tv/popular")
+    Call<PopularTVSeriesResponse> getPopularTVSeries(
+            @Query("api_key") String apiKey,
+            @Query("page") int page,
+            @Query("language") String language
+    );
+
+    @GET("tv/on_the_air")
+    Call<UpComingTVSeriesResponse> getUpComingTVSeries(
+            @Query("api_key") String apiKey,
+            @Query("page") int page,
+            @Query("language") String language
+    );
+
+    @GET("tv/top_rated")
+    Call<TopRatedTVSeriesResponse> getTopRatedTVSeries(
+            @Query("api_key") String apiKey,
+            @Query("page") int page,
+            @Query("language") String language
+    );
+
+    @GET("search/tv")
+    Call<TVSeriesResponse> searchTVSeries(
+            @Query("api_key") String apiKey,
+            @Query("query") String query,
+            @Query("language") String language
+    );
+
+    @GET("tv/{series_id}/watch/providers")
+    Call<WatchProviderResponse> getTVSeriesWatchProviders(
+            @Path("series_id") int seriesId,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("tv/{series_id}/credits")
+    Call<CastResponse> getTVSeriesCredits(
+            @Path("series_id") int seriesId,
+            @Query("api_key") String apiKey
+    );
+
+    @GET("tv/{series_id}/videos")
+    Call<VideoResponse> getTVSeriesVideos(
+            @Path("series_id") int seriesId,
+            @Query("api_key") String apiKey,
+            @Query("language") String language
+    );
+
+    @GET("account/{account_id}/favorite/tv")
+    Call<TVSeriesResponse> getFavoriteTVSeries(
+            @Query("account_id") int accountId,
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId,
+            @Query("language") String language);
+
+    @GET("account/{account_id}/watchlist/tv")
+    Call<TVSeriesResponse> getWatchlistTVSeries(
+            @Path("account_id") int accountId,
+            @Query("api_key") String apiKey,
+            @Query("session_id") String sessionId,
+            @Query("language") String language);
 }
 

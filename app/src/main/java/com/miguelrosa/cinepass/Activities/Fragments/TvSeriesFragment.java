@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.miguelrosa.cinepass.Adapters.FilmListAdapter;
-import com.miguelrosa.cinepass.Adapters.MovieSearchAdapter;
+import com.miguelrosa.cinepass.Adapters.TVSeriesAdapter;
+import com.miguelrosa.cinepass.Adapters.TVSeriesSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
-import com.miguelrosa.cinepass.Domain.Models.Movie;
-import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;
-import com.miguelrosa.cinepass.Domain.Responses.PopularMoviesResponse;
-import com.miguelrosa.cinepass.Domain.Responses.TopRatedMoviesResponse;
-import com.miguelrosa.cinepass.Domain.Responses.UpComingMoviesResponse;
+import com.miguelrosa.cinepass.Domain.Models.TVSeries;
+import com.miguelrosa.cinepass.Domain.Responses.PopularTVSeriesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.TVSeriesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.TopRatedTVSeriesResponse;
+import com.miguelrosa.cinepass.Domain.Responses.UpComingTVSeriesResponse;
 import com.miguelrosa.cinepass.databinding.FragmentTvSeriesBinding;
 
 import java.util.List;
@@ -34,7 +35,7 @@ import retrofit2.Response;
 
 public class TvSeriesFragment extends Fragment {
     private FragmentTvSeriesBinding binding;
-    private RecyclerView.Adapter adapterBestMovies, adapterUpComing, adapterTopRated, movieSearchAdapter;
+    private RecyclerView.Adapter adapterBestTVSeries, adapterUpComing, adapterTopRated, tvSearchAdapter;
 
 
     @Nullable
@@ -45,29 +46,29 @@ public class TvSeriesFragment extends Fragment {
 
         String sessionId = getSessionId();
 
-        fetchMainMovies();
+        fetchMainTVSeries();
 
         binding.rv1.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rv2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rv3.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
 
         binding.rvsearch.setLayoutManager(new LinearLayoutManager(requireContext()));
-        movieSearchAdapter = new MovieSearchAdapter();
-        binding.rvsearch.setAdapter(movieSearchAdapter);
+        tvSearchAdapter = new TVSeriesSearchAdapter();
+        binding.rvsearch.setAdapter(tvSearchAdapter);
 
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchMovies(query);
+                searchTVSeries(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchMovies(newText);
+                searchTVSeries(newText);
 
                 if (newText.isEmpty()) {
-                    fetchMainMovies();
+                    fetchMainTVSeries();
                 }
                 return false;
             }
@@ -75,21 +76,21 @@ public class TvSeriesFragment extends Fragment {
         return view;
     }
 
-    private void fetchPopularMovies(int page) {
+    private void fetchPopularTVSeries(int page) {
         String apiKey = ApiClient.getApiKey();
         String language = "es-ES";
 
-        Call<PopularMoviesResponse> call = ApiClient.getTmdbApiService().getPopularMovies(apiKey, page, language);
+        Call<PopularTVSeriesResponse> call = ApiClient.getTmdbApiService().getPopularTVSeries(apiKey, page, language);
 
-        call.enqueue(new Callback<PopularMoviesResponse>() {
+        call.enqueue(new Callback<PopularTVSeriesResponse>() {
             @Override
-            public void onResponse(Call<PopularMoviesResponse> call, retrofit2.Response<PopularMoviesResponse> response) {
+            public void onResponse(Call<PopularTVSeriesResponse> call, retrofit2.Response<PopularTVSeriesResponse> response) {
                 if (response.isSuccessful()) {
-                    PopularMoviesResponse popularMoviesResponse = response.body();
-                    if (popularMoviesResponse != null) {
-                        List<Movie> movies = popularMoviesResponse.getResults();
-                        adapterBestMovies = new FilmListAdapter(movies);
-                        binding.rv1.setAdapter(adapterBestMovies);
+                    PopularTVSeriesResponse popularTVSeriesResponse = response.body();
+                    if (popularTVSeriesResponse != null) {
+                        List<TVSeries> tvSeries = popularTVSeriesResponse.getResults();
+                        adapterBestTVSeries = new TVSeriesAdapter(tvSeries);
+                        binding.rv1.setAdapter(adapterBestTVSeries);
                         binding.progressBar1.setVisibility(View.GONE);
                     }
                 } else {
@@ -99,26 +100,27 @@ public class TvSeriesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PopularMoviesResponse> call, Throwable t) {
+            public void onFailure(Call<PopularTVSeriesResponse> call, Throwable t) {
+                Log.e("ERROR",""+ t.getMessage());
                 Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void fetchTopRatedMovies(int page) {
+    private void fetchTopRatedTVSeries(int page) {
         String apiKey = ApiClient.getApiKey();
         String language = "es-ES";
 
-        Call<TopRatedMoviesResponse> call = ApiClient.getTmdbApiService().getTopRatedMovies(apiKey, page, language);
+        Call<TopRatedTVSeriesResponse> call = ApiClient.getTmdbApiService().getTopRatedTVSeries(apiKey, page, language);
 
-        call.enqueue(new Callback<TopRatedMoviesResponse>() {
+        call.enqueue(new Callback<TopRatedTVSeriesResponse>() {
             @Override
-            public void onResponse(Call<TopRatedMoviesResponse> call, retrofit2.Response<TopRatedMoviesResponse> response) {
+            public void onResponse(Call<TopRatedTVSeriesResponse> call, retrofit2.Response<TopRatedTVSeriesResponse> response) {
                 if (response.isSuccessful()) {
-                    TopRatedMoviesResponse topratedMoviesResponse = response.body();
-                    if (topratedMoviesResponse != null) {
-                        List<Movie> movies = topratedMoviesResponse.getResults();
-                        adapterTopRated = new FilmListAdapter(movies);
+                    TopRatedTVSeriesResponse topratedTVSeriesResponse = response.body();
+                    if (topratedTVSeriesResponse != null) {
+                        List<TVSeries> tvSeries = topratedTVSeriesResponse.getResults();
+                        adapterTopRated = new TVSeriesAdapter(tvSeries);
                         binding.rv2.setAdapter(adapterTopRated);
                         binding.progressBar2.setVisibility(View.GONE);
                     }
@@ -129,26 +131,26 @@ public class TvSeriesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<TopRatedMoviesResponse> call, Throwable t) {
+            public void onFailure(Call<TopRatedTVSeriesResponse> call, Throwable t) {
                 Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void fetchUpCommingMovies(int page) {
+    private void fetchUpCommingTVSeries(int page) {
         String apiKey = ApiClient.getApiKey();
         String language = "es-ES";
 
-        Call<UpComingMoviesResponse> call = ApiClient.getTmdbApiService().getUpComingMovies(apiKey, page, language);
+        Call<UpComingTVSeriesResponse> call = ApiClient.getTmdbApiService().getUpComingTVSeries(apiKey, page, language);
 
-        call.enqueue(new Callback<UpComingMoviesResponse>() {
+        call.enqueue(new Callback<UpComingTVSeriesResponse>() {
             @Override
-            public void onResponse(Call<UpComingMoviesResponse> call, retrofit2.Response<UpComingMoviesResponse> response) {
+            public void onResponse(Call<UpComingTVSeriesResponse> call, retrofit2.Response<UpComingTVSeriesResponse> response) {
                 if (response.isSuccessful()) {
-                    UpComingMoviesResponse upcomingMoviesResponse = response.body();
-                    if (upcomingMoviesResponse != null) {
-                        List<Movie> movies = upcomingMoviesResponse.getResults();
-                        adapterUpComing = new FilmListAdapter(movies);
+                    UpComingTVSeriesResponse upcomingTVSeriesResponse = response.body();
+                    if (upcomingTVSeriesResponse != null) {
+                        List<TVSeries> tvSeries = upcomingTVSeriesResponse.getResults();
+                        adapterUpComing = new TVSeriesAdapter(tvSeries);
                         binding.rv3.setAdapter(adapterUpComing);
                         binding.progressBar3.setVisibility(View.GONE);
                     }
@@ -159,25 +161,25 @@ public class TvSeriesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<UpComingMoviesResponse> call, Throwable t) {
+            public void onFailure(Call<UpComingTVSeriesResponse> call, Throwable t) {
                 Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void searchMovies(String query) {
+    private void searchTVSeries(String query) {
         String apiKey = ApiClient.getApiKey();
         String language = "es-ES";
 
-        Call<MovieResponse> call = ApiClient.getTmdbApiService().searchMovies(apiKey, query, language);
-        call.enqueue(new Callback<MovieResponse>() {
+        Call<TVSeriesResponse> call = ApiClient.getTmdbApiService().searchTVSeries(apiKey, query, language);
+        call.enqueue(new Callback<TVSeriesResponse>() {
             @Override
-            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+            public void onResponse(@NonNull Call<TVSeriesResponse> call, @NonNull Response<TVSeriesResponse> response) {
                 if (response.isSuccessful()) {
-                    MovieResponse movieResponse = response.body();
-                    if (movieResponse != null) {
-                        List<Movie> searchResults = movieResponse.getResults();
-                        ((MovieSearchAdapter) movieSearchAdapter).updateMovies(searchResults);
+                    TVSeriesResponse tvSeriesResponse = response.body();
+                    if (tvSeriesResponse != null) {
+                        List<TVSeries> searchResults = tvSeriesResponse.getResults();
+                        ((TVSeriesSearchAdapter) tvSearchAdapter).updateTVSeries(searchResults);
 
                         binding.rvsearch.setVisibility(View.VISIBLE);
                         binding.rv1.setVisibility(View.INVISIBLE);
@@ -187,8 +189,8 @@ public class TvSeriesFragment extends Fragment {
                         binding.textView10.setVisibility(View.INVISIBLE);
                         binding.textView11.setVisibility(View.INVISIBLE);
 
-                        if (movieResponse.getResults().toString().equals("[]")) {
-                            fetchMainMovies();
+                        if (tvSeriesResponse.getResults().toString().equals("[]")) {
+                            fetchMainTVSeries();
                         }
                     }
                 } else {
@@ -197,13 +199,13 @@ public class TvSeriesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<TVSeriesResponse> call, @NonNull Throwable t) {
                 Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void fetchMainMovies() {
+    public void fetchMainTVSeries() {
         binding.rvsearch.setVisibility(View.INVISIBLE);
         binding.rv1.setVisibility(View.VISIBLE);
         binding.rv2.setVisibility(View.VISIBLE);
@@ -212,9 +214,9 @@ public class TvSeriesFragment extends Fragment {
         binding.textView10.setVisibility(View.VISIBLE);
         binding.textView11.setVisibility(View.VISIBLE);
 
-        fetchPopularMovies(1);
-        fetchUpCommingMovies(1);
-        fetchTopRatedMovies(1);
+        fetchPopularTVSeries(1);
+        fetchUpCommingTVSeries(1);
+        fetchTopRatedTVSeries(1);
     }
 
     private String getSessionId() {

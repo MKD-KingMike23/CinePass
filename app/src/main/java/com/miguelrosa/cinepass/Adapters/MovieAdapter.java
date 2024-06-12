@@ -19,37 +19,31 @@ import com.miguelrosa.cinepass.Activities.MovieDetailActivity;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+    List<Movie> items;
+    Context context;
 
-    private List<Movie> movies;
-    private Context context;
-
-    public MovieSearchAdapter() {
-        this.movies = new ArrayList<>();
-    }
-
-    public MovieSearchAdapter(List<Movie> movies) {
-        this.movies = movies;
+    public MovieAdapter(List<Movie> items) {
+        this.items = items;
     }
 
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_favorite, parent, false);
-        return new MovieViewHolder(view);
+    public MovieAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context= parent.getContext();
+        View inflate= LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_film,parent,false);
+        return new ViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Movie movie = movies.get(position);
+    public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, int position) {
+        Movie movie = items.get(position);
 
         holder.titleTxt.setText(movie.getTitle());
-        holder.favTxt.setText(String.valueOf(movie.getVoteAverage()));
-        RequestOptions requestOptions = new RequestOptions().transform(new CenterCrop(), new RoundedCorners(30));
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(30));
 
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
@@ -61,26 +55,19 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
             intent.putExtra("id", movie.getId());
             context.startActivity(intent);
         });
-    }
+        }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return items.size();
     }
 
-    public void updateMovies(List<Movie> newMovies) {
-        this.movies = newMovies;
-        notifyDataSetChanged();
-    }
-
-    static class MovieViewHolder extends RecyclerView.ViewHolder {
-        TextView titleTxt, favTxt;
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        TextView titleTxt;
         ImageView pic;
-
-        public MovieViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTxt = itemView.findViewById(R.id.titleTxt);
-            favTxt = itemView.findViewById(R.id.favTxt);
             pic = itemView.findViewById(R.id.imageView7);
         }
     }
