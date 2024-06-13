@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.miguelrosa.cinepass.Adapters.MovieAdapter;
-import com.miguelrosa.cinepass.Adapters.MovieSearchAdapter;
+import com.miguelrosa.cinepass.Adapters.Movie.MovieAdapter;
+import com.miguelrosa.cinepass.Adapters.Movie.MovieSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.Domain.Responses.MovieResponse;

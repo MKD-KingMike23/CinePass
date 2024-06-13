@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.miguelrosa.cinepass.Adapters.MovieListAdapter;
-import com.miguelrosa.cinepass.Adapters.TVSeriesListAdapter;
+import com.miguelrosa.cinepass.Adapters.Movie.MovieListAdapter;
+import com.miguelrosa.cinepass.Adapters.TVSeries.TVSeriesListAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.Movie;
 import com.miguelrosa.cinepass.Domain.Models.TVSeries;

@@ -22,7 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.miguelrosa.cinepass.Adapters.CastAdapter;
 import com.miguelrosa.cinepass.Adapters.GenreAdapter;
-import com.miguelrosa.cinepass.Adapters.MovieTrailerAdapter;
+import com.miguelrosa.cinepass.Adapters.Movie.MovieTrailerAdapter;
 import com.miguelrosa.cinepass.Adapters.WatchProviderAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.Cast;

@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Adapters;
+package com.miguelrosa.cinepass.Adapters.TVSeries;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,30 +10,30 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.miguelrosa.cinepass.Activities.MovieDetailActivity;
+import com.miguelrosa.cinepass.Activities.TVSeriesDetailActivity;
 import com.miguelrosa.cinepass.Domain.Models.Video;
 import com.miguelrosa.cinepass.R;
 
 import java.util.List;
 
-public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapter.TrailerViewHolder> {
+public class TVSeriesTrailerAdapter extends RecyclerView.Adapter<TVSeriesTrailerAdapter.TVSeriesTrailerViewHolder> {
     private List<Video> trailers;
     private Context context;
 
-    public MovieTrailerAdapter(List<Video> trailers, Context context) {
+    public TVSeriesTrailerAdapter(List<Video> trailers, Context context) {
         this.trailers = trailers;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public TrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TVSeriesTrailerAdapter.TVSeriesTrailerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trailer, parent, false);
-        return new TrailerViewHolder(view);
+        return new TVSeriesTrailerAdapter.TVSeriesTrailerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TrailerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TVSeriesTrailerAdapter.TVSeriesTrailerViewHolder holder, int position) {
         Video trailer = trailers.get(position);
         String thumbnailUrl = "https://img.youtube.com/vi/" + trailer.getKey() + "/hqdefault.jpg";
         Glide.with(holder.itemView.getContext())
@@ -41,8 +41,8 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
                 .into(holder.thumbnail);
 
         holder.itemView.setOnClickListener(v -> {
-            if (context instanceof MovieDetailActivity) {
-                ((MovieDetailActivity) context).onTrailerClicked("https://www.youtube.com/embed/" + trailer.getKey() + "?autoplay=1&fs=1");
+            if (context instanceof TVSeriesDetailActivity) {
+                ((TVSeriesDetailActivity) context).onTrailerClicked("https://www.youtube.com/embed/" + trailer.getKey() + "?autoplay=1&fs=1");
             }
         });
     }
@@ -52,10 +52,10 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
         return trailers.size();
     }
 
-    public static class TrailerViewHolder extends RecyclerView.ViewHolder {
+    public static class TVSeriesTrailerViewHolder extends RecyclerView.ViewHolder {
         ImageView thumbnail;
 
-        public TrailerViewHolder(@NonNull View itemView) {
+        public TVSeriesTrailerViewHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.thumbnail);
         }

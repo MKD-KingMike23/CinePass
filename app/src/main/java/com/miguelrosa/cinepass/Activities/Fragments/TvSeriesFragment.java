@@ -17,8 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.miguelrosa.cinepass.Adapters.TVSeriesAdapter;
-import com.miguelrosa.cinepass.Adapters.TVSeriesSearchAdapter;
+import com.miguelrosa.cinepass.Adapters.TVSeries.TVSeriesAdapter;
+import com.miguelrosa.cinepass.Adapters.TVSeries.TVSeriesSearchAdapter;
 import com.miguelrosa.cinepass.Domain.ApiClient;
 import com.miguelrosa.cinepass.Domain.Models.TVSeries;
 import com.miguelrosa.cinepass.Domain.Responses.PopularTVSeriesResponse;

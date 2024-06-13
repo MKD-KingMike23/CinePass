@@ -1,7 +1,5 @@
 package com.miguelrosa.cinepass.Activities;
 
-import static android.app.PendingIntent.getActivity;
-
 import android.os.Bundle;
 import android.view.MenuItem;
 

@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Adapters;
+package com.miguelrosa.cinepass.Adapters.TVSeries;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.miguelrosa.cinepass.Activities.MovieDetailActivity;
 import com.miguelrosa.cinepass.Activities.TVSeriesDetailActivity;
 import com.miguelrosa.cinepass.Domain.Models.TVSeries;
 import com.miguelrosa.cinepass.R;

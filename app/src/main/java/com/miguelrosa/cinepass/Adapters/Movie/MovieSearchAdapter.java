@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Adapters;
+package com.miguelrosa.cinepass.Adapters.Movie;
 
 import android.content.Context;
 import android.content.Intent;

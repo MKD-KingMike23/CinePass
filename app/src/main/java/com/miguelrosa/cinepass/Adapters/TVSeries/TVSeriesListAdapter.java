@@ -1,4 +1,4 @@
-package com.miguelrosa.cinepass.Adapters;
+package com.miguelrosa.cinepass.Adapters.TVSeries;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,45 +15,45 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.miguelrosa.cinepass.Activities.MovieDetailActivity;
-import com.miguelrosa.cinepass.Domain.Models.Movie;
+import com.miguelrosa.cinepass.Activities.TVSeriesDetailActivity;
+import com.miguelrosa.cinepass.Domain.Models.TVSeries;
 import com.miguelrosa.cinepass.R;
 
 import java.util.List;
 
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder>{
-    List<Movie> items;
+public class TVSeriesListAdapter extends RecyclerView.Adapter<TVSeriesListAdapter.ViewHolder>{
+    List<TVSeries> items;
     Context context;
 
-    public MovieListAdapter(List<Movie> items) {
+    public TVSeriesListAdapter(List<TVSeries> items) {
         this.items = items;
     }
 
     @NonNull
     @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TVSeriesListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context= parent.getContext();
         View inflate= LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_favorite,parent,false);
-        return new MovieListAdapter.ViewHolder(inflate);
+        return new TVSeriesListAdapter.ViewHolder(inflate);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
-        Movie movie = items.get(position);
+    public void onBindViewHolder(@NonNull TVSeriesListAdapter.ViewHolder holder, int position) {
+        TVSeries tvSeries = items.get(position);
 
-        holder.titleTxt.setText(movie.getTitle());
-        holder.favTxt.setText(String.valueOf(movie.getVoteAverage()));
+        holder.titleTxt.setText(tvSeries.getName());
+        holder.favTxt.setText(String.valueOf(tvSeries.getVoteAverage()));
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(30));
 
         Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w500" + movie.getPosterPath())
+                .load("https://image.tmdb.org/t/p/w500" + tvSeries.getPosterPath())
                 .apply(requestOptions)
                 .into(holder.pic);
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), MovieDetailActivity.class);
-            intent.putExtra("id", movie.getId());
+            Intent intent = new Intent(holder.itemView.getContext(), TVSeriesDetailActivity.class);
+            intent.putExtra("id", tvSeries.getId());
             context.startActivity(intent);
         });
     }
